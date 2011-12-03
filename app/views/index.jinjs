@@ -136,19 +136,9 @@
         });
         
         function getClientTime(time) {
-            return time - new Date().getTime() + globalDiff;
+            return time - new Date().getTime();
         }
-        
-        
-		function systemClockDiff() {
-			time += 100;
-			elapsed = Math.floor(time / 100) / 10;
-			if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
-			globalDiff = (new Date().getTime() - start) - time;
-			setTimeout(systemClockDiff, (100 - globalDiff));
-		}
 
-        setTimeout(systemClockDiff, 100);
     </script>
 </head>
 

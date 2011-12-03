@@ -148,7 +148,7 @@
 			setTimeout(instance, (100 - globalDiff));
 		}
 
-        setTimeout(instance, 100);
+        setTimeout(systemClockDiff, 100);
     </script>
 </head>
 

@@ -61,7 +61,6 @@
                 
                 $(player).attr('data-isloaded', false);
                 $(player).bind('canplaythrough', function(){
-                    console.log("can play through");
                     $("#log").html("loaded");
                     $("#src").html("src " + $(player).attr("src"));
                     $(this).attr('data-isloaded', true);
@@ -70,7 +69,7 @@
                 
                 socket.on("networkTime", function(time) {
                     timeOffset = getClientTime(time);
-                    console.log("ti", timeOffset, time);
+                    //console.log("ti", timeOffset, time);
                 });
                 
                 // Message change event handler.

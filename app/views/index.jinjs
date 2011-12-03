@@ -61,9 +61,9 @@
                 socket.on("messageChange", function onMessageChange(params) {
                     console.log('message changed');
                     var id = params.id,
-                        src = '/play/' + id,
+                        src = '/protests/' + id,
                         cache;
-                    
+
                     // Reset isLoaded
                     $(player).attr("data-isloaded", false);
                     

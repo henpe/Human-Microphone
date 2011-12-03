@@ -81,6 +81,9 @@ app.get('/play/:id', function(req, res){
 	
 	var path = protestsFileDir + "/" + req.params.id;
 
+	res.redirect('/protests/' + req.params.id, 301);
+/*
+	res.header('Content-Type: audio/mpeg');
 	res.sendfile(path, function(err){
   		if (err) {
     		next(err);
@@ -88,7 +91,7 @@ app.get('/play/:id', function(req, res){
     		console.log('transferred %s', path);
   		}
 	});
-
+*/
 });
 
 
@@ -111,7 +114,7 @@ app.post('/save', function(req, res, next){
 	fs.rename(req.body.filename, fnNew);
 
 	if (io.sockets) {
-		console.log('messageChange', JSON.stringify({messageId: ''}));
+		console.log('messageChange', JSON.stringify({messageId: newFilename}));
 		io.sockets.emit('messageChange', JSON.stringify({id: newFilename}));
 	}
 	/*if (req.body && req.body.filename) {

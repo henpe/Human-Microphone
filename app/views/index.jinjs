@@ -10,11 +10,12 @@
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
 
-    <script src="/nowjs/now.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 
     <script>
         $(document).ready(function() {
             var clientId = parseInt(Math.random()*1000);
+            var isConnected = false;
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
             var testAudio = "/audio/32kbps_audio.mp3";
             
@@ -22,8 +23,7 @@
             var player = $('<audio>', {
                 id          : 'player',
                 autobuffer  : 'autobuffer',  
-                preload     : 'auto',
-                controls    : true
+                preload     : 'auto'
             }).appendTo('#message'); 
             
             // Add MPEG source
@@ -32,30 +32,55 @@
                 type: 'audio/mpeg'
             }).appendTo(player);
             
-            // Send client ID to server
-            now.setClientId({id: clientId});
+            // Create socket
+            var socket = io.connect(document.domain, {
+                'reconnect': true,
+                'reconnection delay': 500,
+                'max reconnection attempts': 5
+            });
+            
+            // Connect client
+            socket.on('connect', function () {
+                console.log('connected');
+                isConnected = true;
+                
+                //$('#connected').text('Connected');
+                
+                // Emit clientId
+                socket.emit('setClientId', clientId);
+                
+                // Message change event handler.
+                socket.on("messageChange", function onMessageChange(id) {
+                    console.log('message changed');
+                    var message;
+                    
+                    // TODO: Check if message is in localStorage
+                    if (hasLocalStorage){
+                        message = localStorage.getItem(id);
+                    }
+                    
+                    if (!message) {
+                        
+                    }
+                });
+                
+                // Message play handler
+                socket.on("messagePlay", function onMessagePlay(id) {
+                    console.log('message play');
+                    var message;
+                    
+                    // TODO: Check if message is in localStorage
+                    if (hasLocalStorage){
+                        message = localStorage.getItem(id);
+                    }
+                    
+                    if (!message) {
+                        
+                    }
+                });                
+            });
         });
         
-        // Change message handler
-        now.messageChange = function(id) {
-            console.log('message changed');
-            var message;
-            
-            // TODO: Check if message is in localStorage
-            if (hasLocalStorage){
-                message = localStorage.getItem(id);
-            }
-            
-            if (!message) {
-                
-            }
-        }
-        
-        // Play message handler 
-        now.messagePlay = function(id) {
-            
-        }
-
     </script>
 </head>
 

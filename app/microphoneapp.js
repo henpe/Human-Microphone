@@ -6,7 +6,9 @@ var express = require('express'),
 	parted = require('parted'),
 	base60 = require('./base60'),
 	fs = require('fs');
-	
+
+var eventEmitter = new events.EventEmitter();
+
 var app = module.exports = express.createServer();
 
 var port = process.env.PORT || 8080;
@@ -65,7 +67,7 @@ app.get('/', function(req, res){
 
 
 app.get('/play', function(req, res){
-	io.sockets.emit('messagePlay', JSON.stringify({id: 'randomId'}));
+	io.sockets.emit('messagePlay', JSON.stringify({id: 'randomId', ts: new Date().getTime()}));
 	res.render('play.jinjs', {
     	title: 'Play',
     	layout: false
@@ -115,21 +117,13 @@ app.post('/save', function(req, res, next){
 
 	if (io.sockets) {
 		console.log('messageChange', JSON.stringify({messageId: newFilename}));
-		io.sockets.emit('messageChange', JSON.stringify({id: newFilename}));
+		io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
 	}
-	/*if (req.body && req.body.filename) {
-		console.log(req.body.filename);
-		
-		if (io.sockets) {
-			console.log('messageChange', JSON.stringify({messageId: ''}));
-			io.sockets.emit('messageChange', JSON.stringify({messageId: ''}));
-		}
-	}*/
-	
-  res.render('save.jinjs', {
-    title: 'Save Form',
-    layout: false
-  });
+
+  	res.render('save.jinjs', {
+    	title: 'Save Form',
+    	layout: false
+  	});
 });
 	
 app.get('/upload', function(req, res){
@@ -146,7 +140,6 @@ console.log("Express server listening on port %d in %s mode", app.address().port
 
 
 /******* socket.io bits */
-var globalSocket;
 io.sockets.on('connection', function (socket) {
 
 	/*
@@ -156,7 +149,6 @@ io.sockets.on('connection', function (socket) {
 	    socket.set('clientId', id, function () {
 	    	// tell the UI that things are nearly ready
       		socket.emit('clientReady');
-      		globalSocket = socket;
     	});
   	});
 
@@ -164,27 +156,23 @@ io.sockets.on('connection', function (socket) {
 		The client has loaded the message
 	*/
 	socket.on('messageLoaded', function (data) {
-		
+		console.log('messageLoaded', data);
   	});
 
 	socket.on('disconnect', function () {
-		//disconnectClient(socket);
-		globalSocket = undefined;
   	});
   	
   	socket.on('disconnectClient', function(data) {
-		globalSocket = undefined;
+
   	});
   	
 });
 
 
 
-// regular check of clients 
+// regular network time sync of clients 
 setInterval(function() {
-	/*globalSocket.get('talkId', function (err, id) {
-		socket.emit('rating', JSON.stringify({ s: rating, c: clients }) );
-	});*/
-}, 300);
+	socket.io.emit('networkTime', new Date().getTime());
+}, 500);
 
 

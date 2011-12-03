@@ -2,11 +2,18 @@
  * Module dependencies.
  */
 
-var express = require('express');
-
-var app = module.exports = express.createServer();
+var express = require('express'),
+	form = require('connect-form');
+	
+var app = module.exports = express.createServer(form({ keepExtensions: true }));
 
 var port = process.env.PORT || 8080;
+
+var io = require('socket.io').listen(app);
+
+// Redis
+//var redisClient = redis.createClient(); 
+
 
 
 // Configuration
@@ -34,23 +41,35 @@ app.configure('production', function(){
 // Routes
 
 app.get('/', function(req, res){
-  res.render('index.jinjs', {
-    title: 'Home',
-    layout: false
-  });
+  	res.render('index.jinjs', {
+    	title: 'Home',
+    	layout: false
+  	});
 });
+
+
+app.get('/play', function(req, res){
+	io.sockets.emit('messagePlay', JSON.stringify({id: 'randomId'}));
+	res.render('play.jinjs', {
+    	title: 'Play',
+    	layout: false
+  	});
+});
+
+
 
 
 app.post('/save', function(req, res, next){
 
  req.form.complete(function(err, fields, files){
     if (err) {
+    	console.log('error');
       next(err);
     } else {
       console.log('\nuploaded %s to %s'
         ,  files.image.filename
         , files.image.path);
-      res.redirect('back');
+
     }
   });
 
@@ -61,12 +80,23 @@ app.post('/save', function(req, res, next){
     process.stdout.write('Uploading: %' + percent + '\r');
   });
 
+
+console.log(req.form);
+	/*if (req.body && req.body.filename) {
+		console.log(req.body.filename);
+		
+		if (io.sockets) {
+			console.log('messageChange', JSON.stringify({messageId: ''}));
+			io.sockets.emit('messageChange', JSON.stringify({messageId: ''}));
+		}
+	}*/
+	
   res.render('save.jinjs', {
-    title: 'Saving',
+    title: 'Save Form',
     layout: false
   });
 });
-
+	
 app.get('/upload', function(req, res){
   res.render('upload.jinjs', {
     title: 'Upload Form',
@@ -78,3 +108,48 @@ app.get('/upload', function(req, res){
 
 app.listen(port);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+
+
+/******* socket.io bits */
+var globalSocket;
+io.sockets.on('connection', function (socket) {
+
+	/*
+		The client has connected.
+	*/
+	socket.on('setClientId', function (id) {
+	    socket.set('clientId', id, function () {
+	    	// tell the UI that things are nearly ready
+      		socket.emit('clientReady');
+      		globalSocket = socket;
+    	});
+  	});
+
+	/*
+		The client has loaded the message
+	*/
+	socket.on('messageLoaded', function (data) {
+		
+  	});
+
+	socket.on('disconnect', function () {
+		//disconnectClient(socket);
+		globalSocket = undefined;
+  	});
+  	
+  	socket.on('disconnectClient', function(data) {
+		globalSocket = undefined;
+  	});
+  	
+});
+
+
+
+// regular check of clients 
+setInterval(function() {
+	/*globalSocket.get('talkId', function (err, id) {
+		socket.emit('rating', JSON.stringify({ s: rating, c: clients }) );
+	});*/
+}, 300);
+
+

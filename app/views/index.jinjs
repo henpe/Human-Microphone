@@ -28,6 +28,12 @@
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
             var testAudio = "/audio/nu_click.mp3";
             
+			var start = new Date().getTime(),
+    			time = 0,
+    			elapsed = '0.0',
+    			globalDiff = 0;
+            
+            
             // Create player
             var player = $('<audio>', {
                 id          : 'player',
@@ -137,8 +143,19 @@
         });
         
         function getClientTime(time) {
-            return time - new Date().getTime();
+            return time - new Date().getTime() + globalDiff;
         }
+        
+        
+		function systemClockDiff() {
+			time += 100;
+			elapsed = Math.floor(time / 100) / 10;
+			if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+			globalDiff = (new Date().getTime() - start) - time;
+			setTimeout(instance, (100 - globalDiff));
+		}
+
+        setTimeout(instance, 100);
     </script>
 </head>
 

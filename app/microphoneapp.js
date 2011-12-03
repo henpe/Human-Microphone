@@ -131,10 +131,10 @@ app.post('/save', function(req, res, next){
 		fn[fn.length] = newFilename;
 		
 		console.log('Creating an ogg', fnNew, fn.join('/'));
-		/*ffmpeg.convert('ogg', fnNew, [], fn.join('/'), function(stderr, stdout, exitCode) {
+		ffmpeg.convert('ogg', fnNew, [], fn.join('/'), function(stderr, stdout, exitCode) {
 			console.log(stderr, stdout, exitCode);
 			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
-		});*/
+		});
 		
 	}
 

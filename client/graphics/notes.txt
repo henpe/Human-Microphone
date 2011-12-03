@@ -1,0 +1,7 @@
+frame number
+
+0		neutral
+9		listening
+17		neutral
+26		talking
+37		neutral

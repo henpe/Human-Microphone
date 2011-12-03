@@ -3,9 +3,11 @@
  */
 
 var express = require('express'),
-	form = require('connect-form');
+	parted = require('parted'),
+	base60 = require('./base60'),
+	fs = require('fs');
 	
-var app = module.exports = express.createServer(form({ keepExtensions: true }));
+var app = module.exports = express.createServer();
 
 var port = process.env.PORT || 8080;
 
@@ -14,10 +16,22 @@ var io = require('socket.io').listen(app);
 // Redis
 //var redisClient = redis.createClient(); 
 
+var protestsFileDir = __dirname + '/public/protests';
+
+app.use(parted({
+  // custom file path
+  path: protestsFileDir,
+  // memory usage limit per request
+  limit: 30 * 1024,
+  // disk usage limit per request
+  diskLimit: 100 * 1024 * 1024,
+  // allow multiple parts of the same name,
+  // then available as an array
+  multiple: true
+}));
 
 
 // Configuration
-
 app.configure(function(){
   	app.set('views', __dirname + '/views');
   	app.set('view engine', 'jinjs');
@@ -29,6 +43,8 @@ app.configure(function(){
 	app.use(express.cookieParser());
 	app.use(express.session({ secret: "keyboard cat" }));
 });
+
+
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
@@ -57,31 +73,47 @@ app.get('/play', function(req, res){
 });
 
 
+app.get('/play/:id', function(req, res){
+
+	if (!req.params.id) {
+		return;
+	}
+	
+	var path = protestsFileDir + "/" + req.params.id;
+
+	res.sendfile(path, function(err){
+  		if (err) {
+    		next(err);
+  		} else {
+    		console.log('transferred %s', path);
+  		}
+	});
+
+});
+
+
+
 
 
 app.post('/save', function(req, res, next){
 
- req.form.complete(function(err, fields, files){
-    if (err) {
-    	console.log('error');
-      next(err);
-    } else {
-      console.log('\nuploaded %s to %s'
-        ,  files.image.filename
-        , files.image.path);
+	/*
+		extract filename - base60 encode it to get a nice ID.
+		Also rename the filename on disk.
+	*/
+	var fn = req.body.filename.split('/');
+	var filename = fn[fn.length-1];
+	var num = parseInt((new Date().getTime()/1000));
+	var newFilename = base60.numtosxg(num);
+	fn[fn.length-1] = newFilename;
+	var fnNew = fn.join('/');
 
-    }
-  });
+	fs.rename(req.body.filename, fnNew);
 
-  // We can add listeners for several form
-  // events such as "progress"
-  req.form.on('progress', function(bytesReceived, bytesExpected){
-    var percent = (bytesReceived / bytesExpected * 100) | 0;
-    process.stdout.write('Uploading: %' + percent + '\r');
-  });
-
-
-console.log(req.form);
+	if (io.sockets) {
+		console.log('messageChange', JSON.stringify({messageId: ''}));
+		io.sockets.emit('messageChange', JSON.stringify({id: newFilename}));
+	}
 	/*if (req.body && req.body.filename) {
 		console.log(req.body.filename);
 		

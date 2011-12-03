@@ -13,6 +13,8 @@ var app = module.exports = express.createServer();
 
 var port = process.env.PORT || 8080;
 
+var playheadOffset = 5000; // 5000 milliseconds - 5 seconds
+
 var io = require('socket.io').listen(app);
 
 // Redis
@@ -67,7 +69,12 @@ app.get('/', function(req, res){
 
 
 app.get('/play', function(req, res){
-	io.sockets.emit('messagePlay', JSON.stringify({id: 'randomId', ts: new Date().getTime()}));
+	var ts = new Date().getTime();
+	io.sockets.emit('messagePlay', JSON.stringify({
+													id: 'randomId', 
+													ts: ts,
+													tsAt: ts+playheadOffset
+	}));
 	res.render('play.jinjs', {
     	title: 'Play',
     	layout: false

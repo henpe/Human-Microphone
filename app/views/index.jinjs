@@ -33,7 +33,8 @@
                 id          : 'player',
                 autobuffer  : 'autobuffer',  
                 preload     : 'auto',
-                controls    : true
+                controls    : false/*,
+                src         : testAudio*/
             }).appendTo('#message')[0]; 
             
             // Create button

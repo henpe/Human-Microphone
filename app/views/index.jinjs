@@ -37,13 +37,6 @@
                 src         : testAudio
             }).appendTo('#message')[0]; 
             
-            // Add MPEG source
-            $('<source>', {
-                src: testAudio,
-                type: 'audio/mpeg'
-            }).appendTo(player);
-            
-            
             // Create button
             $('#message').bind("click", function(e) {
                 player.play();
@@ -70,6 +63,7 @@
                 $(player).bind('canplaythrough', function(){
                     console.log("can play through");
                     $("#log").html("loaded");
+                    $("#src").html("src " + $(player).attr("src"));
                     $(this).attr('data-isloaded', true);
                     socket.emit('messageLoaded', clientId);
                 });
@@ -95,14 +89,14 @@
                     $(player).attr("data-isloaded", false);
                     
                     // TODO: Check if message is in localStorage
-                    if (hasLocalStorage){
+                    /*if (hasLocalStorage){
                         cache = localStorage.getItem(id);
                     }
-                    if (cache) src = cache;
+                    if (cache) src = cache;*/
                     
                     // Load new audio file
                     $(player).attr("src", src);
-                    $(player).children("source").attr("src", src);
+                    //$(player).children("source").attr("src", src);
                     $(player).load();
                     
                     $("#log").html("changed message finished");
@@ -147,6 +141,7 @@
         <div data-role="content">
             <div id="message"></div>
             <div id="log"></div>
+            <div id="src"></div>
         </div>
     </div>
 </body>

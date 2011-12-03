@@ -180,7 +180,7 @@ io.sockets.on('connection', function (socket) {
 
 // regular network time sync of clients 
 setInterval(function() {
-	socket.io.emit('networkTime', new Date().getTime());
+	io.sockets.emit('networkTime', new Date().getTime());
 }, 500);
 
 

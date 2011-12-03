@@ -12,21 +12,35 @@
 
     <script src="/socket.io/socket.io.js"></script>
 
+    <style>
+        #message {
+            height:200px;
+            width:200px;
+            background-color:#000;
+        }
+    </style>
+
     <script>
         $(document).ready(function() {
             var clientId = parseInt(Math.random()*1000);
             var isConnected = false;
             var timeOffset = 0;
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
-            var testAudio = "/audio/32kbps_audio.mp3";
+            var testAudio = "/audio/nu_click.mp3";
             
             // Create player
             var player = $('<audio>', {
                 id          : 'player',
                 autobuffer  : 'autobuffer',  
                 preload     : 'auto',
-                controls    : true
+                controls    : false,
+                src         : testAudio
             }).appendTo('#message')[0]; 
+            
+            // Create button
+            $('#message').bind("click", function(e) {
+                player.play();
+            });
             
             // Create socket
             var socket = io.connect(document.domain, {
@@ -54,6 +68,7 @@
                 
                 socket.on("networkTime", function(time) {
                     timeOffset = getClientTime(time);
+                    console.log("ti", timeOffset, time);
                 });
                 
                 // Message change event handler.
@@ -95,7 +110,7 @@
                     
                     timeOffset = getClientTime(timestamp);
                     
-                    var playAt = (params.playAt - timeOffset);
+                    var playAt = (params.tsAt - timeOffset);
                     var timeOut = playAt - new Date().getTime();
 
                     if (timeOut < 0) {
@@ -113,7 +128,7 @@
         });
         
         function getClientTime(time) {
-            return time - new Date().getTime;
+            return time - new Date().getTime();
         }
     </script>
 </head>

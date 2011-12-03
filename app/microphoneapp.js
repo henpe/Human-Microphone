@@ -95,13 +95,13 @@ app.get('/play/:id', function(req, res){
 	//res.redirect('/protests/' + req.params.id, 301);
 
 	//res.header('Content-Type: audio/mpeg');
-	res.sendfile(path, function(err){
+	/*res.sendfile(path, function(err){
   		if (err) {
     		next(err);
   		} else {
     		console.log('transferred %s', path);
   		}
-	});
+	});*/
 
 });
 

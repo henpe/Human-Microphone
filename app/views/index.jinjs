@@ -16,6 +16,7 @@
         $(document).ready(function() {
             var clientId = parseInt(Math.random()*1000);
             var isConnected = false;
+            var timeOffset = 0;
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
             var testAudio = "/audio/32kbps_audio.mp3";
             
@@ -51,14 +52,21 @@
                     socket.emit('messageLoaded', clientId);
                 });
                 
+                socket.on("networkTime", function(time) {
+                    timeOffset = getClientTime(time);
+                });
+                
                 // Message change event handler.
                 socket.on("messageChange", function onMessageChange(json) {
                     console.log('message changed');
                     var params = $.parseJSON(json);
                     var id = params.id,
+                        timestamp = params.ts,
                         src = '/protests/' + id,
                         cache;
 
+                    timeOffset = getClientTime(timestamp); 
+                    
                     // Reset isLoaded
                     $(player).attr("data-isloaded", false);
                     
@@ -83,17 +91,30 @@
                 socket.on("messagePlay", function onMessagePlay(json) {
                     var params = $.parseJSON(json);
                     var id = params.id,
-                        timestamp = params.timestamp;
+                        timestamp = params.ts;
                     
-                    console.log('message play');
-                    if (player && $(player).attr('data-isloaded')) {
-                        console.log("player", player);
-                        player.play();
-                    }
+                    timeOffset = getClientTime(timestamp);
+                    
+                    var playAt = (params.playAt - timeOffset);
+                    var timeOut = playAt - new Date().getTime();
+
+                    if (timeOut < 0) {
+                       //dont play, too far behind.
+                    } else {
+                       window.setTimeout(function() {
+                           if (player && $(player).attr('data-isloaded')) {
+                               console.log("player", player);
+                               player.play();
+                           }
+                       }, timeOut);
+                    }                    
                 });                
             });
         });
         
+        function getClientTime(time) {
+            return time - new Date().getTime;
+        }
     </script>
 </head>
 

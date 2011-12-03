@@ -6,22 +6,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.css" />
-    <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0rc1/jquery.mobile-1.0rc1.min.js"></script>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="/nowjs/now.js"></script>
 
     <script>
         $(document).ready(function() {
-    
+            var clientId = parseInt(Math.random()*1000);
+            var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
+            var testAudio = "/audio/32kbps_audio.mp3";
+            
+            // Create player
+            var player = $('<audio>', {
+                id          : 'player',
+                autobuffer  : 'autobuffer',  
+                preload     : 'auto',
+                controls    : true
+            }).appendTo('#message'); 
+            
+            // Add MPEG source
+            $('<source>', {
+                src: testAudio,
+                type: 'audio/mpeg'
+            }).appendTo(player);
+            
+            // Send client ID to server
+            now.setClientId({id: clientId});
         });
+        
+        // Change message handler
+        now.messageChange = function(id) {
+            console.log('message changed');
+            var message;
+            
+            // TODO: Check if message is in localStorage
+            if (hasLocalStorage){
+                message = localStorage.getItem(id);
+            }
+            
+            if (!message) {
+                
+            }
+        }
+        
+        // Play message handler 
+        now.messagePlay = function(id) {
+            
+        }
+
     </script>
 </head>
 
 <body>
     <div data-role="page" class="type-index">
         <div data-role="content">
+            <div id="message"></div>
         </div>
     </div>
 </body>

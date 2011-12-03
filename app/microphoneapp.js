@@ -5,7 +5,8 @@
 var express = require('express'),
 	parted = require('parted'),
 	base60 = require('./base60'),
-	fs = require('fs');
+	fs = require('fs'),
+	events = require('events');
 
 var eventEmitter = new events.EventEmitter();
 

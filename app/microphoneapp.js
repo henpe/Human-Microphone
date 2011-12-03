@@ -6,8 +6,6 @@ var express = require('express');
 
 var app = module.exports = express.createServer();
 
-var io = require('socket.io').listen(app);
-
 var port = process.env.PORT || 8080;
 
 
@@ -63,12 +61,18 @@ app.post('/save', function(req, res, next){
     process.stdout.write('Uploading: %' + percent + '\r');
   });
 
-  res.render('index.jinjs', {
-    title: 'Home',
+  res.render('save.jinjs', {
+    title: 'Saving',
     layout: false
   });
 });
 
+app.get('/upload', function(req, res){
+  res.render('upload.jinjs', {
+    title: 'Upload Form',
+    layout: false
+  });
+});
 
 
 

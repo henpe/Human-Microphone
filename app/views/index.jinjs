@@ -52,8 +52,9 @@
                 });
                 
                 // Message change event handler.
-                socket.on("messageChange", function onMessageChange(params) {
+                socket.on("messageChange", function onMessageChange(json) {
                     console.log('message changed');
+                    var params = $.parseJSON(json);
                     var id = params.id,
                         src = '/protests/' + id,
                         cache;
@@ -79,7 +80,8 @@
                 });
                 
                 // Message play handler
-                socket.on("messagePlay", function onMessagePlay(params) {
+                socket.on("messagePlay", function onMessagePlay(json) {
+                    var params = $.parseJSON(json);
                     var id = params.id,
                         timestamp = params.timestamp;
                     

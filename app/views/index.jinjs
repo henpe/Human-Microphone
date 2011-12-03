@@ -26,15 +26,15 @@
             var isConnected = false;
             var timeOffset = 0;
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
-            var testAudio = "/audio/32kbps_audio.mp3";
+            var testAudio = "/audio/nu_click.mp3";
             
             // Create player
             var player = $('<audio>', {
                 id          : 'player',
                 autobuffer  : 'autobuffer',  
                 preload     : 'auto',
-                controls    : false/*,
-                src         : testAudio*/
+                controls    : false,
+                src         : testAudio
             }).appendTo('#message')[0]; 
             
             // Create button

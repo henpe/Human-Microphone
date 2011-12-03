@@ -21,18 +21,18 @@
     </style>
 
     <script>
+    
+			var start = new Date().getTime(),
+    			time = 0,
+    			elapsed = '0.0',
+    			globalDiff = 0;
+    
         $(document).ready(function() {
             var clientId = parseInt(Math.random()*1000);
             var isConnected = false;
             var timeOffset = 0;
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
             var testAudio = "/audio/nu_click.mp3";
-            
-			var start = new Date().getTime(),
-    			time = 0,
-    			elapsed = '0.0',
-    			globalDiff = 0;
-            
             
             // Create player
             var player = $('<audio>', {

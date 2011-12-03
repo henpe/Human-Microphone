@@ -23,8 +23,9 @@
             var player = $('<audio>', {
                 id          : 'player',
                 autobuffer  : 'autobuffer',  
-                preload     : 'auto'
-            }).appendTo('#message'); 
+                preload     : 'auto',
+                controls    : true
+            }).appendTo('#message')[0]; 
             
             // Add MPEG source
             $('<source>', {
@@ -49,33 +50,43 @@
                 // Emit clientId
                 socket.emit('setClientId', clientId);
                 
+                $(player).attr('data-isloaded', false);
+                $(player).bind('canplaythrough', function(){
+                    console.log("can play through");
+                    $(this).attr('data-isloaded', true);
+                    socket.emit('messageLoaded', clientId);
+                });
+                
                 // Message change event handler.
-                socket.on("messageChange", function onMessageChange(id) {
+                socket.on("messageChange", function onMessageChange(params) {
                     console.log('message changed');
-                    var message;
+                    var id = params.id,
+                        src = '/play/' + id,
+                        cache;
+                    
+                    // Reset isLoaded
+                    $(player).attr("data-isloaded", false);
                     
                     // TODO: Check if message is in localStorage
                     if (hasLocalStorage){
-                        message = localStorage.getItem(id);
+                        cache = localStorage.getItem(id);
                     }
+                    if (cache) src = cache;
                     
-                    if (!message) {
-                        
-                    }
+                    // Load new audio file
+                    $(player).attr("src", src);
+                    
                 });
                 
                 // Message play handler
-                socket.on("messagePlay", function onMessagePlay(id) {
+                socket.on("messagePlay", function onMessagePlay(params) {
+                    var id = params.id,
+                        timestamp = params.timestamp;
+                    
                     console.log('message play');
-                    var message;
-                    
-                    // TODO: Check if message is in localStorage
-                    if (hasLocalStorage){
-                        message = localStorage.getItem(id);
-                    }
-                    
-                    if (!message) {
-                        
+                    if (player && $(player).attr('data-isloaded')) {
+                        console.log("player", player);
+                        player.play();
                     }
                 });                
             });

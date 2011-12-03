@@ -37,6 +37,13 @@
                 src         : testAudio
             }).appendTo('#message')[0]; 
             
+            // Add MPEG source
+            $('<source>', {
+                src: testAudio,
+                type: 'audio/mpeg'
+            }).appendTo(player);
+            
+            
             // Create button
             $('#message').bind("click", function(e) {
                 player.play();
@@ -62,6 +69,7 @@
                 $(player).attr('data-isloaded', false);
                 $(player).bind('canplaythrough', function(){
                     console.log("can play through");
+                    $("#log").html("loaded");
                     $(this).attr('data-isloaded', true);
                     socket.emit('messageLoaded', clientId);
                 });
@@ -74,6 +82,7 @@
                 // Message change event handler.
                 socket.on("messageChange", function onMessageChange(json) {
                     console.log('message changed');
+                    $("#log").html("changed message start");
                     var params = $.parseJSON(json);
                     var id = params.id,
                         timestamp = params.ts,
@@ -92,18 +101,16 @@
                     if (cache) src = cache;
                     
                     // Load new audio file
-                    $(player).empty();
-                    // Add MPEG source
-                    $('<source>', {
-                        src: src,
-                        type: 'audio/mpeg'
-                    }).appendTo(player);
                     $(player).attr("src", src);
+                    $(player).children("source").attr("src", src);
                     $(player).load();
+                    
+                    $("#log").html("changed message finished");
                 });
                 
                 // Message play handler
                 socket.on("messagePlay", function onMessagePlay(json) {
+                    $("#log").html("play message");
                     var params = $.parseJSON(json);
                     var id = params.id,
                         timestamp = params.ts;
@@ -117,7 +124,9 @@
                        //dont play, too far behind.
                     } else {
                        window.setTimeout(function() {
+                           $("#log").html("play message timeout");
                            if (player && $(player).attr('data-isloaded')) {
+                               $("#log").html("play message complete");
                                console.log("player", player);
                                player.play();
                            }
@@ -137,6 +146,7 @@
     <div data-role="page" class="type-index">
         <div data-role="content">
             <div id="message"></div>
+            <div id="log"></div>
         </div>
     </div>
 </body>

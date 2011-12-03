@@ -67,8 +67,9 @@
                 
                 $(player).attr('data-isloaded', false);
                 $(player).bind('canplaythrough', function(){
+                    console.log('can play');
                     $("#log").html("loaded");
-                    $("#src").html("src " + $(player).attr("src"));
+                    $("#src").append("<p>src " + $(player).attr("src") + "</p>");
                     $(this).attr('data-isloaded', true);
                     socket.emit('messageLoaded', clientId);
                 });
@@ -101,8 +102,7 @@
                     
                     // Load new audio file
                     $(player).attr("src", src);
-                    //$(player).children("source").attr("src", src);
-                    $(player).load();
+                    player.load();
                     
                     $("#log").html("changed message finished");
                 });

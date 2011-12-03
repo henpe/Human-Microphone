@@ -27,12 +27,6 @@
                 controls    : true
             }).appendTo('#message')[0]; 
             
-            // Add MPEG source
-            $('<source>', {
-                src: testAudio,
-                type: 'audio/mpeg'
-            }).appendTo(player);
-            
             // Create socket
             var socket = io.connect(document.domain, {
                 'reconnect': true,
@@ -74,8 +68,14 @@
                     if (cache) src = cache;
                     
                     // Load new audio file
+                    $(player).empty();
+                    // Add MPEG source
+                    $('<source>', {
+                        src: src,
+                        type: 'audio/mpeg'
+                    }).appendTo(player);
                     $(player).attr("src", src);
-                    
+                    $(player).load();
                 });
                 
                 // Message play handler

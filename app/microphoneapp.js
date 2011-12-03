@@ -6,7 +6,8 @@ var express = require('express'),
 	parted = require('parted'),
 	base60 = require('./base60'),
 	fs = require('fs'),
-	events = require('events');
+	events = require('events'),
+	ffmpeg = require('./lib/ffmpeg');
 
 var eventEmitter = new events.EventEmitter();
 
@@ -91,8 +92,8 @@ app.get('/play/:id', function(req, res){
 	
 	var path = protestsFileDir + "/" + req.params.id;
 
-	res.redirect('/protests/' + req.params.id, 301);
-/*
+	//res.redirect('/protests/' + req.params.id, 301);
+
 	res.header('Content-Type: audio/mpeg');
 	res.sendfile(path, function(err){
   		if (err) {
@@ -101,7 +102,7 @@ app.get('/play/:id', function(req, res){
     		console.log('transferred %s', path);
   		}
 	});
-*/
+
 });
 
 
@@ -125,7 +126,16 @@ app.post('/save', function(req, res, next){
 
 	if (io.sockets) {
 		console.log('messageChange', JSON.stringify({messageId: newFilename}));
-		io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+		
+		fn[fn.length-1] = 'ogg';
+		fn[fn.length] = newFilename;
+		
+		console.log('Creating an ogg', fnNew, fn.join('/'));
+		/*ffmpeg.convert('ogg', fnNew, [], fn.join('/'), function(stderr, stdout, exitCode) {
+			console.log(stderr, stdout, exitCode);
+			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+		});*/
+		
 	}
 
   	res.render('save.jinjs', {

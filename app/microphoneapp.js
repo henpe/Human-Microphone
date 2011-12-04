@@ -81,6 +81,7 @@ app.get('/time', function(req, res){
 });
 
 
+/* this is to be removed */
 app.get('/play', function(req, res){
 	var ts = new Date().getTime();
 	io.sockets.emit('messagePlay', JSON.stringify({
@@ -192,28 +193,35 @@ app.post('/save', function(req, res, next){
 					
 					
 			console.log('FFMPEG ENCODE', stderr, stdout, exitCode);
+
+			var ts = new Date().getTime();
+			io.sockets.emit('messagePlay', JSON.stringify({
+															id: newFilename, 
+															ts: ts,
+															tsAt: ts+playheadOffset
+			}));
+					
+			/*fn[fn.length-1] = 'ogg';
+			fn[fn.length] = newFilename;
 			
-				/*fn[fn.length-1] = 'ogg';
-				fn[fn.length] = newFilename;
+			var oggFnNew = fn.join('/');
+			var oggFile = oggFnNew + '.ogg'
+			
+			console.log('Creating an ogg', fnNew, oggFile);
+			ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
+			//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
+				console.log('OGG ENCODE', stderr, stdout, exitCode);
+				io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
 				
-				var oggFnNew = fn.join('/');
-				var oggFile = oggFnNew + '.ogg'
+				fs.renameSync(oggFile, oggFnNew);
 				
-				console.log('Creating an ogg', fnNew, oggFile);
-				ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
-				//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
-					console.log('OGG ENCODE', stderr, stdout, exitCode);
-					io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
-					
-					fs.renameSync(oggFile, oggFnNew);
-					
-					res.render('save.jinjs', {
-						title: 'Save Form',
-						layout: false,
-						id: newFilename
-					});
-					
-				});	*/
+				res.render('save.jinjs', {
+					title: 'Save Form',
+					layout: false,
+					id: newFilename
+				});
+				
+			});	*/
 
 			//}
 		});	

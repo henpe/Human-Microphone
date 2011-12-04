@@ -104,11 +104,11 @@
                         timestamp = params.ts;
                     
                     timeOffset = getClientTime(timestamp);
-                    
+                    var d = new Date().getTime();
                     var playAt = (params.tsAt - timeOffset);
-                    var timeOut = playAt - new Date().getTime();
+                    var timeOut = playAt - d;
 					$('#playAt').html('Play At: ' + playAt);
-					$('#time').html('Timeout: ' + timeOut);
+					$('#time').html('Timeout: ' + timeOut + ' - other: ' + (d + playAt));
 					
                     if (timeOut < 0) {
                        //dont play, too far behind.
@@ -132,14 +132,13 @@
         
         function getClientTime(time) {
             var t = time - new Date().getTime();
-            $('#offset').html(new Date().getTime());
             $('#offset').html(t);
             if (offsetTimes.length > 60) {
             	offsetTimes = offsetTimes.splice(0, 25);
             }
             offsetTimes.push(t);
-			return t;
-            //return getStandardDeviation(offsetTimes, precision);
+			//return t;
+            return getStandardDeviation(offsetTimes, precision);
         }
         
         

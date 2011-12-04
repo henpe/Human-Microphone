@@ -75,7 +75,7 @@ app.get('/', function(req, res){
 
 app.get('/play', function(req, res){
 	var ts = new Date().getTime();
-	io.sockets.emit('messagePlay', JSON.stringify({
+	io.sockets.broadcast.emit('messagePlay', JSON.stringify({
 													id: 'randomId', 
 													ts: ts,
 													tsAt: ts+playheadOffset
@@ -144,7 +144,7 @@ app.post('/save', function(req, res, next){
 		console.log('Creating an ogg', fnNew, fn.join('/'));
 		ffmpeg.convert('ogg', fnNew, [], fn.join('/'), function(stderr, stdout, exitCode) {
 			console.log(stderr, stdout, exitCode);
-			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+			io.sockets.broadcast.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
 		});
 		
 	}

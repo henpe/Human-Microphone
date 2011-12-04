@@ -125,6 +125,36 @@ app.get('/play/:id', function(req, res){
 });
 
 
+app.get('/play/ogg/:id', function(req, res){
+
+	if (!req.params.id) {
+		res.render('play.jinjs', {
+			title: 'Play - error, no protest found',
+			layout: false,
+			error: 'Unable to find any protest by that name.'
+		});
+	}
+	
+	var filePath = path.join(protestsFileDir, 'ogg', req.params.id);
+    var stat = fs.statSync(filePath);
+
+    res.writeHead(200, {
+        'Content-Type': 'audio/ogg',
+        'Content-Length': stat.size
+    });
+
+    var readStream = fs.createReadStream(filePath);
+    readStream.on('data', function(data) {
+        res.write(data);
+    });
+
+    readStream.on('end', function() {
+        res.end();
+    });
+
+});
+
+
 
 
 

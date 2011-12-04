@@ -23,9 +23,42 @@
             text-align:left;          
         }
         #message {
-            height:200px;
-            width:200px;
-            background-color:#000;
+            height:180px;
+            width:320px;
+            position:relative;
+            background:#000 url(/img/client_sprite.png);
+        }
+        #message.listening {
+            background-position:-320px 0;
+        }
+        #message.talking {
+            background-position:-640px 0;
+        }
+        #join {
+            text-align:center;
+            position:absolute;
+            background:rgba(0,0,0,0.9);
+            top:0;
+            left:0;
+            right:0;
+            bottom:0;
+        }
+        #join span {
+            border-radius:5px;
+            background:rgba(80,80,80,1);
+            display:inline-block;
+            margin-top:30%;
+            width:150px;
+            text-align:center;
+            font-size:1.2em;
+            padding:10px;  
+        }
+        #join span:hover {
+            background:rgba(110,110,110,1);
+            cursor:pointer;
+        }
+        #error {
+            padding-top:20px;
         }
     </style>
 
@@ -41,7 +74,8 @@
             var player = $('#message audio')[0]; 
             
             // Create button
-            $('#message').bind("click", function(e) {
+            $('#join span').bind("click", function(e) {
+                $('#join').fadeOut("slow");
                 player.play();
             });
 
@@ -78,6 +112,10 @@
                     socket.emit('messageLoaded', clientId);
                 });
                 
+                $(player).bind('ended', function(e){
+                    $('#message').removeClass("talking, listening");
+                });
+                
                 /*socket.on("networkTime", function(time) {
                     timeOffset = getClientTime(time);
                 });*/
@@ -85,6 +123,7 @@
                 // Message change event handler.
                 socket.on("messageChange", function onMessageChange(json) {
                     console.log('message changed');
+                    $('#message').addClass("listening");
                     $("#log").html("changed message start");
                     var params = $.parseJSON(json);
                     var id = params.id,
@@ -138,6 +177,7 @@
                                $("#log").html("play message complete");
                                console.log("player", player);
                                player.play();
+                               $('#message').removeClass("listening").addClass("talking");
                            }
                        }, timeOut);
                     }                    
@@ -199,13 +239,16 @@
         <div data-role="content">
             <div id="message">
                 <audio src="/audio/nu_click.mp3"></audio>
+                <div id="join"><span>Join!</span></div>
             </div>
-            <div id="log"></div>
-            <div id="src"></div>
-            <div id="offset"></div>
-            <div id="time"></div>
-            <div id="playAt"></div>
-            <div id="playAtServer"></div>
+            <div id="error">
+	            <div id="log"></div>
+	            <div id="src"></div>
+	            <div id="offset"></div>
+	            <div id="time"></div>
+	            <div id="playAt"></div>
+	            <div id="playAtServer"></div>
+            </div>
         </div>
     </div>
 </body>

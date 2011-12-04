@@ -18,10 +18,8 @@ var port = process.env.PORT || 8080;
 
 var playheadOffset = 5000; // 5000 milliseconds - 5 seconds
 
-var io = require('socket.io').listen(app);
+//var io = require('socket.io').listen(app);
 
-// Redis
-//var redisClient = redis.createClient(); 
 
 var protestsFileDir = __dirname + '/public/protests';
 

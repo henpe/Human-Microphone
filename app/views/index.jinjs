@@ -35,7 +35,7 @@
             $('#message').bind("click", function(e) {
                 player.play();
             });
-            
+            console.log(document.domain);
             // Create socket
             var socket = io.connect(document.domain, {
                 'reconnect': true,
@@ -88,6 +88,7 @@
                     if (cache) src = cache;*/
                     
                     // Load new audio file
+                    console.log(src, id);
                     $(player).attr("src", src);
                     player.load();
                     

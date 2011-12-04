@@ -1,1 +1,5 @@
-save
+{% if error %}
+{ "error": "{{ error }}" }
+{% else %}
+{ "id": "{{ id }}" }
+{% endif %}

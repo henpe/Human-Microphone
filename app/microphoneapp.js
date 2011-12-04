@@ -183,14 +183,22 @@ app.post('/save', function(req, res, next){
 		ffmpeg.convert('ogg', fnNew, [], fn.join('/'), function(stderr, stdout, exitCode) {
 			console.log(stderr, stdout, exitCode);
 			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+			
+			res.render('save.jinjs', {
+				title: 'Save Form',
+				layout: false,
+				id: newFilename
+			});
+			
+		});	
+	} else {
+	
+		res.render('save.jinjs', {
+			title: 'Save Form',
+			layout: false,
+			error: 'Failed to protest'
 		});
-		
 	}
-
-  	res.render('save.jinjs', {
-    	title: 'Save Form',
-    	layout: false
-  	});
 });
 	
 app.get('/upload', function(req, res){

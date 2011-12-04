@@ -6,13 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
     <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
-    <script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
+    <!-- script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script -->
 
     <script src="/socket.io/socket.io.js"></script>
 
     <style>
+        body {
+            background:#333;
+            color:#fff;
+            text-align:center;
+        }
+        #page {
+            width: 300px;
+            margin:auto 0;
+            text-align:left;          
+        }
         #message {
             height:200px;
             width:200px;
@@ -186,7 +195,7 @@
 </head>
 
 <body>
-    <div data-role="page" class="type-index">
+    <div id="page" data-role="page" class="type-index">
         <div data-role="content">
             <div id="message">
                 <audio src="/audio/nu_click.mp3"></audio>

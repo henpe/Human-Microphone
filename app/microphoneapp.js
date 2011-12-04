@@ -182,13 +182,23 @@ app.post('/save', function(req, res, next){
 			
 			fs.unlinkSync(fnNew);
 			fs.renameSync(mp3File, fnNew);
-			
+			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+
+			res.render('save.jinjs', {
+						title: 'Save Form',
+						layout: false,
+						id: newFilename
+			});
+					
+					
 			console.log('FFMPEG ENCODE', stderr, stdout, exitCode);
-				fn[fn.length-1] = 'ogg';
+			
+				/*fn[fn.length-1] = 'ogg';
 				fn[fn.length] = newFilename;
 				
 				var oggFnNew = fn.join('/');
 				var oggFile = oggFnNew + '.ogg'
+				
 				console.log('Creating an ogg', fnNew, oggFile);
 				ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
 				//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
@@ -203,7 +213,7 @@ app.post('/save', function(req, res, next){
 						id: newFilename
 					});
 					
-				});	
+				});	*/
 
 			//}
 		});	

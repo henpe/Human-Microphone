@@ -166,16 +166,19 @@ function uploadFile(path) {
                 //deleteFile(mediaRec.src+'.m4a');
                 
                 //globalFS.root.getFile(audioFile, {create:true, exclusive: false}, gotFileEntry, fail); 
-                statusNode.text("Uploaded. Waiting to play");
+                statusNode.text("Uploaded");
                 
                 // Wait 1 second before kicking off play on the server
                 setTimeout(function() {
-                    statusNode.text("Playing");
+                    /*statusNode.text("Playing");
                     $.get(serverEndpoint+'/play', function(data) {
                         
                         location.reload(true);                        
                     });
+                    */
                     
+                    // Page needs to be reset - don't ask!                    
+                    location.reload(true);
                 }, 1000);
             },
             function(error) {

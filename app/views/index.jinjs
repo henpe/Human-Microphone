@@ -115,7 +115,7 @@
                     }
                     
 					$('#playAt').html('Play At: ' + playAt);
-					$('#time').html('Timeout: ' + timeOut + ' - other: ' + (d + playAt));
+					$('#time').html('Timeout: ' + timeOut + ' - date: ' + d);
 					
                     if (timeOut < 0) {
                        //dont play, too far behind.

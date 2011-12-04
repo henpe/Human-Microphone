@@ -112,12 +112,12 @@
                     //timeOffset = getClientTime(timestamp);
                     
                     var d = new Date().getTime();
-                    var playAt = (params.tsAt - timeOffset);
+                    var playAt = (params.tsAt + timeOffset);
                     
                     var timeOut = playAt - d;
                     
 					$('#playAt').html('Play At: ' + playAt);
-					$('#playAtServer').html('Play At Servertime: ' + params.tsAt + '-' + timeOffset);
+					$('#playAtServer').html('Play At Servertime: ' + params.tsAt + '+' + timeOffset);
 					$('#time').html('Timeout: ' + timeOut + ' - Offset: ' + timeOffset + ' - date: ' + d);
 					
                     if (timeOut < 0) {

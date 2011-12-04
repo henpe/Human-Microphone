@@ -175,14 +175,15 @@ app.post('/save', function(req, res, next){
 
 	if (io.sockets) {
 		
-		ffmpeg.exec(['-i', fnNew, '-ab', '32k', '-acodec', 'libmp3lame', '-y', fnNew], function(stderr, stdout, exitCode) {
+		ffmpeg.exec(['-i', fnNew, '-ab', '32k', '-acodec', 'libmp3lame', '-y', '-v', 4, fnNew], function(stderr, stdout, exitCode) {
 			//if (!stderr) {			
 			console.log('FFMPEG ENCODE', stderr, stdout, exitCode);
 				fn[fn.length-1] = 'ogg';
 				fn[fn.length] = newFilename;
 				
 				console.log('Creating an ogg', fnNew, fn.join('/'));
-				ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
+				ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, fn.join('/')], function(stderr, stdout, exitCode) {
+				//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
 					console.log('OGG ENCODE', stderr, stdout, exitCode);
 					io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
 					

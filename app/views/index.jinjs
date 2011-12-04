@@ -152,7 +152,7 @@
                 });
                 
                 $(player).bind('ended', function(e){
-                    console.log("ended");
+                    $("#log").html("play message ended");
                     $('#page').removeClass("talking listening");
                 });
                 
@@ -214,13 +214,12 @@
                        window.setTimeout(function() {
                            $("#log").html("play message timeout");
                            if (player && $(player).attr('data-isloaded')) {
-                               $("#log").html("play message complete");
                                var currentTime = new Date().getTime();
-                               if (currentTime < playAt + 100 && currentTime > playAt - 100) {
+                               if (currentTime < playAt + 50 && currentTime > playAt - 50) {
                                    player.play();
                                    $('#page').removeClass("listening").addClass("talking");
                                } else {
-                                   $('#page').removeClass("listening");
+                                   $('#page').removeClass("listening talking");
                                }
                            }
                        }, timeOut);

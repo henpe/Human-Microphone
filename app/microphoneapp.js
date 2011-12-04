@@ -174,23 +174,50 @@ app.post('/save', function(req, res, next){
 	fs.rename(req.body.filename, fnNew);
 
 	if (io.sockets) {
-		console.log('messageChange', JSON.stringify({messageId: newFilename}));
 		
-		fn[fn.length-1] = 'ogg';
-		fn[fn.length] = newFilename;
-		
-		console.log('Creating an ogg', fnNew, fn.join('/'));
-		ffmpeg.convert('ogg', fnNew, [], fn.join('/'), function(stderr, stdout, exitCode) {
-			console.log(stderr, stdout, exitCode);
+		/* added output to files as ffmpeg seems to have a problem outputting to the same file */
+		var mp3File = fnNew + '.mp3';
+		ffmpeg.exec(['-i', fnNew, '-ab', '32k', '-acodec', 'libmp3lame', '-y', '-v', 4, mp3File], function(stderr, stdout, exitCode) {
+			//if (!stderr) {			
+			
+			fs.unlinkSync(fnNew);
+			fs.renameSync(mp3File, fnNew);
 			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
-			
+
 			res.render('save.jinjs', {
-				title: 'Save Form',
-				layout: false,
-				id: newFilename
+						title: 'Save Form',
+						layout: false,
+						id: newFilename
 			});
+					
+					
+			console.log('FFMPEG ENCODE', stderr, stdout, exitCode);
 			
+				/*fn[fn.length-1] = 'ogg';
+				fn[fn.length] = newFilename;
+				
+				var oggFnNew = fn.join('/');
+				var oggFile = oggFnNew + '.ogg'
+				
+				console.log('Creating an ogg', fnNew, oggFile);
+				ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
+				//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
+					console.log('OGG ENCODE', stderr, stdout, exitCode);
+					io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+					
+					fs.renameSync(oggFile, oggFnNew);
+					
+					res.render('save.jinjs', {
+						title: 'Save Form',
+						layout: false,
+						id: newFilename
+					});
+					
+				});	*/
+
+			//}
 		});	
+		
 	} else {
 	
 		res.render('save.jinjs', {
@@ -251,3 +278,11 @@ setInterval(function() {
 }, 500);
 
 
+/* catch any requests to exit and send a signal to the clients */
+['SIGINT', 'SIGTERM', 'SIGKILL', 'SIGQUIT', 'SIGHUP', 'exit'].forEach(function(signal){
+	process.addListener(signal, function(){
+		console.log(signal + ' received, disconnecting clients.');
+		io.sockets.emit('disconnect');
+		process.exit(1);
+	});
+});

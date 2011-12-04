@@ -251,3 +251,11 @@ setInterval(function() {
 }, 500);
 
 
+/* catch any requests to exit and send a signal to the clients */
+['SIGINT', 'SIGTERM', 'SIGKILL', 'SIGQUIT', 'SIGHUP', 'exit'].forEach(function(signal){
+	process.addListener(signal, function(){
+		console.log(signal + ' received, disconnecting clients.');
+		io.sockets.emit('disconnect');
+		process.exit(1);
+	});
+});

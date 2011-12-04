@@ -135,7 +135,7 @@
 		var precision = 8;
         
         function getClientTime(time) {
-            var t = time - new Date().getTime() + globalDiff;
+            var t = time - new Date().getTime();
             $('#offset').html(new Date().getTime());
             $('#offset').html(t);
             if (offsetTimes.length > 60) {

@@ -50,6 +50,7 @@ app.configure(function(){
 });
 
 
+/* have to disable websocket because it causes problems with 3G connections */
 io.configure(function () {
   io.set('transports', ['xhr-polling']);
 });

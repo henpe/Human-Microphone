@@ -281,9 +281,9 @@ io.sockets.on('connection', function (socket) {
 
 
 // regular network time sync of clients 
-setInterval(function() {
+/*setInterval(function() {
 	io.sockets.emit('networkTime', new Date().getTime());
-}, 500);
+}, 500);*/
 
 
 /* catch any requests to exit and send a signal to the clients */

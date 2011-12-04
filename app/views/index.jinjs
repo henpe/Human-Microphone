@@ -13,7 +13,7 @@
 
     <style>
         body {
-            background:#000;
+            background:#000 url(/img/black-Linen.png);
             color:#fff;
             text-align:center;
             margin:0;
@@ -31,12 +31,41 @@
             width:320px;
             position:relative;
             background:#000 url(/img/client_sprite.png);
+            border-radius:5px;
+            margin-top:5px;
         }
-        #message.listening {
+        .listening #message {
             background-position:-320px 0;
         }
-        #message.talking {
+        .talking #message {
             background-position:-640px 0;
+        }
+        #status {
+            margin:10px 0;
+            padding:10px;
+            background:rgba(255,255,255,0.5);
+            border-radius:5px;
+        }
+        #status p {
+            color:#222;
+            display:none;
+            margin:0;
+            padding:0;
+            font-size:1em;
+            text-align:center;
+        }
+        #status p.default {
+            display:block;
+        }
+        .listening #status p.default,
+        .talking #status p.default {
+            display:none;
+        }
+        .listening #status p.listening {
+            display:block;
+        }
+        .talking #status p.talking {
+            display:block;
         }
         #join {
             text-align:center;
@@ -46,6 +75,7 @@
             left:0;
             right:0;
             bottom:0;
+            border-radius:5px;
         }
         #join span {
             border-radius:5px;
@@ -62,7 +92,12 @@
             cursor:pointer;
         }
         #error {
-            padding-top:20px;
+            position:fixed;
+            top:0;
+            left:0;
+            width:300px;
+            padding:10px;
+            background:rgba(200,0,0,0.3);
         }
     </style>
 
@@ -118,7 +153,7 @@
                 
                 $(player).bind('ended', function(e){
                     console.log("ended");
-                    $('#message').removeClass("talking listening");
+                    $('#page').removeClass("talking listening");
                 });
                 
                 /*socket.on("networkTime", function(time) {
@@ -128,7 +163,7 @@
                 // Message change event handler.
                 socket.on("messageChange", function onMessageChange(json) {
                     console.log('message changed');
-                    $('#message').addClass("listening");
+                    $('#page').addClass("listening");
                     $("#log").html("changed message start");
                     var params = $.parseJSON(json);
                     var id = params.id,
@@ -182,7 +217,7 @@
                                $("#log").html("play message complete");
                                console.log("player", player);
                                player.play();
-                               $('#message').removeClass("listening").addClass("talking");
+                               $('#page').removeClass("listening").addClass("talking");
                            }
                        }, timeOut);
                     }                    
@@ -246,6 +281,12 @@
                 <audio src="/audio/nu_click.mp3"></audio>
                 <div id="join"><span>Join!</span></div>
             </div>
+            <div id="status">
+                <p class="default">This is The Inhuman Megaphone</p>
+	            <p class="listening">Listening for messages</p>
+	            <p class="talking">Playing a message</p>
+            </div>
+            <div class=""></div>
             <div id="error">
 	            <div id="log"></div>
 	            <div id="src"></div>

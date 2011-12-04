@@ -27,16 +27,9 @@
             var isConnected = false;
             var timeOffset = 0;
             var hasLocalStorage = ('localStorage' in window && window['localStorage'] !== null) ? true : false;
-            var testAudio = "/audio/nu_click.mp3";
             
             // Create player
-            var player = $('<audio>', {
-                id          : 'player',
-                autobuffer  : 'autobuffer',  
-                preload     : 'auto',
-                controls    : false,
-                src         : testAudio
-            }).appendTo('#message')[0]; 
+            var player = $('#message audio')[0]; 
             
             // Create button
             $('#message').bind("click", function(e) {
@@ -61,10 +54,10 @@
                 socket.emit('setClientId', clientId);
                 
                 $(player).attr('data-isloaded', false);
-                $(player).bind('canplaythrough', function(){
+                $(player).bind('canplaythrough', function(e){
                     $("#log").html("loaded");
-                    $("#src").html("src " + $(player).attr("src"));
-                    $(this).attr('data-isloaded', true);
+                    $("#src").append("<p>src " + $(player).attr("src") + "</p>");
+                    $(player).attr('data-isloaded', true);
                     socket.emit('messageLoaded', clientId);
                 });
                 
@@ -96,8 +89,7 @@
                     
                     // Load new audio file
                     $(player).attr("src", src);
-                    //$(player).children("source").attr("src", src);
-                    $(player).load();
+                    player.load();
                     
                     $("#log").html("changed message finished");
                 });
@@ -196,7 +188,9 @@
 <body>
     <div data-role="page" class="type-index">
         <div data-role="content">
-            <div id="message"></div>
+            <div id="message">
+                <audio src="/audio/nu_click.mp3"></audio>
+            </div>
             <div id="log"></div>
             <div id="src"></div>
             <div id="offset"></div>

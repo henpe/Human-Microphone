@@ -50,6 +50,9 @@ app.configure(function(){
 });
 
 
+io.configure(function () {
+  io.set('transports', ['xhr-polling']);
+});
 
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 

@@ -187,15 +187,15 @@ app.post('/save', function(req, res, next){
 				fn[fn.length-1] = 'ogg';
 				fn[fn.length] = newFilename;
 				
-				fnNew = fn.join('/');
-				var oggFile = fnNew + '.ogg'
-				console.log('Creating an ogg', fnNew, oggFile);
-				ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
+				var oggFnNew = fn.join('/');
+				var oggFile = oggFnNew + '.ogg'
+				console.log('Creating an ogg', oggFnNew, oggFile);
+				ffmpeg.exec(['-i', oggFnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
 				//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
 					console.log('OGG ENCODE', stderr, stdout, exitCode);
 					io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
 					
-					fs.renameSync(oggFile, fnNew);
+					fs.renameSync(oggFile, oggFnNew);
 					
 					res.render('save.jinjs', {
 						title: 'Save Form',

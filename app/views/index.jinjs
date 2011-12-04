@@ -107,12 +107,8 @@
                     var d = new Date().getTime();
                     var playAt = (params.tsAt - timeOffset);
                     
-                    var timeOut = 0;
-                    if (playAt > 0) {
-                    	timeOut = d + playAt;
-                    } else {
-                    	timeOut = d - playAt;
-                    }
+                    var timeOut = d - playAt;
+
                     
 					$('#playAt').html('Play At: ' + playAt);
 					$('#time').html('Timeout: ' + timeOut + ' - Offset: ' + timeOffset + ' - date: ' + d);

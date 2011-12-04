@@ -108,7 +108,7 @@
                     var playAt = (params.tsAt - timeOffset);
                     
                     var timeOut = 0;
-                    if (playOut > 0) {
+                    if (playAt > 0) {
                     	timeOut = d - playAt;
                     } else {
                     	timeOut = playAt - d;

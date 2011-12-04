@@ -1,10 +1,28 @@
 uid = new Date().getTime(),
 audioFile = uid+".wav";
+serverEndpoint = "http://ec2-50-17-2-124.compute-1.amazonaws.com"; // No trailing slash
 
 
 $(document).ready(function() {
     statusNode = $('#status');
 
+    var audioHistory = JSON.parse(localStorage.getItem('history')) || {};
+    
+    var historyHtml = '';
+    /*audioHistory = {
+            'asdasdas': 12345345,
+            'adwdawdwa': 213155
+    }*/
+    $.each(audioHistory, function(audioId, datestamp) {
+        historyHtml += '<li><a href="#'+audioId+'">['+audioId+'] '+datestamp+'</a></li>';
+    });
+    $('#history').html(historyHtml);
+
+
+    $('#history a').click(function() {
+        var audioId = $(this).attr('href').replace('#','');
+        alert(audioId);
+    });
 
     $('#record').bind('touchstart', function() {
         
@@ -15,7 +33,7 @@ $(document).ready(function() {
     
         node.addClass('recording');
         
-        setTimeout(function() {
+        //setTimeout(function() {
             mediaRec.startRecord();
             
             var recTime = 0;
@@ -25,7 +43,7 @@ $(document).ready(function() {
                 statusNode.text(recTime + " sec");
             }, 1000);
         
-        }, 0);        
+        //}, 0);        
         
     });
     
@@ -42,52 +60,8 @@ $(document).ready(function() {
 
 function onDeviceReady() {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, gotFS, fail); 
-    //recordAudio()    
-    //window.resolveLocalFileSystemURI("documents:///myrecording.wav", onResolveSuccess, fail);
 }
 
-/*
-    function captureSuccess(mediaFiles) {
-        var i, len;
-        for (i = 0, len = mediaFiles.length; i < len; i += 1) {
-            uploadFile(mediaFiles[i]);
-        }       
-    }
-
-    // Called if something bad happens.
-    // 
-    function captureError(error) {
-        var msg = 'An error occurred during capture: ' + error.code;
-        navigator.notification.alert(msg, null, 'Uh oh!');
-    }
-
-    // A button will call this function
-    //
-    function captureAudio() {
-        // Launch device audio recording application, 
-        // allowing user to capture up to 2 audio clips
-        navigator.device.capture.captureAudio(captureSuccess, captureError);
-    }
-
-    // Upload files to server
-    function uploadFile(mediaFile) {
-        var ft = new FileTransfer(),
-            path = mediaFile.fullPath,
-            name = mediaFile.name;
-
-        alert(path);
-        ft.upload(path,
-            "http://www.deepcobalt.com/upload.php",
-            function(result) {
-                console.log('Upload success: ' + result.responseCode);
-                console.log(result.bytesSent + ' bytes sent');
-            },
-            function(error) {
-                console.log('Error uploading file ' + path + ': ' + error.code);
-            },
-            { fileName: name });   
-    }
-*/
 
 function gotFS(fileSystem) { 
      
@@ -126,108 +100,29 @@ function fail(fileEntry) {
 }
 
 
-/*
-function recordAudio(src) {        
-        //var src = "documents://myrecording.wav";
-        mediaRec = new Media(src, onSuccess, onError);
 
-        // Record audio
-		var recordSettings = {
-            "FormatID": "kAudioFormatULaw",
-            "SampleRate": 8000.0,
-            "NumberOfChannels": 1,
-            "LinearPCMBitDepth": 16
-        }        
-        
-        //mediaRec.startRecordWithSettings(recordSettings);
-        mediaRec.startRecord();
-
-        // Stop recording after 10 sec
-        var recTime = 0;
-        var recInterval = setInterval(function() {
-            recTime = recTime + 1;
-            setAudioPosition(recTime + " sec");
+function onSuccess() {
+    console.log("recordAudio():Audio Success");
             
-            if (recTime >= 5) {
-                clearInterval(recInterval);
-                //mediaRec.stopRecordWithSettings();
-                mediaRec.stopRecord();
-                
-            }
-        }, 1000);
-} 
-*/
-
-
-
-    function onSuccess() {
-        console.log("recordAudio():Audio Success");
-                
-        // Convert the audio file to MP3 format
-        //var recordingEncoder = window.plugins.recordingEncoder;
-        window.plugins.recordingEncoder.encodeRecording(audioFile);
-        statusNode.text("Encoding");
-        
-        // The filename will now be in the documents folder as filename + '.m4a'
-        //var file = mediaRec.src.substr('documents://'.length);
-        //encodeAudio(mediaRec.src);
-        
-        setTimeout(function() { 
-            uploadFile(mediaRec.src+'.m4a');
-        }, 2000);
-        //uploadFile(mediaRec.src);
-        //mediaRec.play();
-        
-        //window.resolveLocalFileSystemURI(mediaRec, resok, resfail);
-        
-        //location.reload(true);
-    }
-
-    // onError Callback 
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' + 
-              'message: ' + error.message + '\n');
-    }
-
-// Set audio position
-function setAudioPosition(position) {
-    document.getElementById('audio_position').innerHTML = position;
+    // Convert the audio file to MP3 format
+    //var recordingEncoder = window.plugins.recordingEncoder;
+    window.plugins.recordingEncoder.encodeRecording(audioFile);
+    statusNode.text("Encoding");
+    
+    // The filename will now be in the documents folder as filename + '.m4a'
+    
+    
+    // Arbitrarily start the upload process after 2 seconds
+    // because the only audio encoder which worked didn't have a callback (!!?!?!?)
+    setTimeout(function() { 
+        uploadFile(mediaRec.src+'.m4a');
+    }, 2000);
 }
 
-
-
-
-
-
-
-
-function encodeAudio(src) {
-    alert('encode '+src);
-		var success = function(newM4APath) {
-			//Do something with your new encoded audio (upload it?)
-			alert('encode done');
-            console.log(newM4APath);            
-		}
-
-		var fail = function(statusCode) {
-			//Why did it fail?
-            alert('fail');
-			console.log(statusCode);
-		}
-    //console.log(window.plugins.AudioEncode);
-    window.plugins.AudioEncode.encodeAudio(src, 
-        function() {
-            alert('success');
-        },
-        function() {
-            alert('fail');
-         }
-    ); 
-
+function onError(error) {
+    alert('code: '    + error.code    + '\n' + 
+          'message: ' + error.message + '\n');
 }
-
-
 
 
 
@@ -240,8 +135,10 @@ function uploadFile(path) {
 
         statusNode.text("Uploading");
         var options = new FileUploadOptions();
+        options.fileKey  = "filename";
         options.fileName = "audio.m4a";
         options.mimeType = "audio/mp4";
+        
         
         var params = new Object();
         params.value1 = "test";
@@ -250,20 +147,41 @@ function uploadFile(path) {
         options.params = params;
 
         ft.upload(path,
-            "http://www.deepcobalt.com/temp/humanmicrophone/upload.php",
-            //"http://172.16.105.40:8080/save",
+            //"http://www.deepcobalt.com/temp/humanmicrophone/upload.php",
+            //"http://ec2-50-17-2-124.compute-1.amazonaws.com/save",
+            serverEndpoint+'/save',
             function(result) {
+                var responseId = result.id,
+                    datestamp  = new Date().getTime();
+                    
                 console.log('Upload success: ' + result.responseCode);
                 console.log(result.bytesSent + ' bytes sent'); 
+                
+                // Save list to localStorage
+                var audioHistory = JSON.parse(localStorage.getItem('history')) || {};
+                audioHistory[responseId] = datestamp;
+                localStorage.setItem('history', JSON.stringify(audioHistory));
                 
                 //deleteFile(mediaRec.src);
                 //deleteFile(mediaRec.src+'.m4a');
                 
                 //globalFS.root.getFile(audioFile, {create:true, exclusive: false}, gotFileEntry, fail); 
-                statusNode.text("Done");
-                location.reload(true);
+                statusNode.text("Uploaded. Waiting to play");
+                
+                // Wait 1 second before kicking off play on the server
+                setTimeout(function() {
+                    statusNode.text("Playing");
+                    $.get(serverEndpoint+'/play', function(data) {
+                        
+                        location.reload(true);                        
+                    });
+                    
+                }, 1000);
             },
             function(error) {
+                statusNode.text("Error uploading. Retry.");
+                statusNode.unbind('click');
+                statusNode.click(function() { uploadFile(path); });
                 console.log('Error uploading file ' + path + ': ' + error.code);
             },
             options);   
@@ -271,11 +189,11 @@ function uploadFile(path) {
     }
     
     
-      function deleteFile(fileURI) {
-               console.log("Delete file: " + fileURI);
-               window.resolveLocalFileSystemURI(fileURI, resok, resfail);
-               function resok(fileEntry) { console.log("Delete file entry: " +fileEntry.name); fileEntry.remove(fdok, fdfail); }
-               function resfail(error) { console.log("resolveFileSystemURI failed: " +error.code); }
-               function fdok() { console.log("file deleted"); }
-               function fdfail(error) { console.log("File delete failed (error " +error.code + ")"); }
-       }    
+function deleteFile(fileURI) {
+   console.log("Delete file: " + fileURI);
+   window.resolveLocalFileSystemURI(fileURI, resok, resfail);
+   function resok(fileEntry) { console.log("Delete file entry: " +fileEntry.name); fileEntry.remove(fdok, fdfail); }
+   function resfail(error) { console.log("resolveFileSystemURI failed: " +error.code); }
+   function fdok() { console.log("file deleted"); }
+   function fdfail(error) { console.log("File delete failed (error " +error.code + ")"); }
+}    

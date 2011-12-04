@@ -77,12 +77,29 @@
             width: 320px;
             text-align: center;
             color: #990000;
-            font-size: 2em;
+            font-size: 1.8em;
+            text-transform: uppercase;
         }
         .hidden {
             position: absolute;
             left: -3000px;
             top: -3000px;
+        }
+        
+        #history {
+            background-color: #333;
+            padding: 0;
+            margin: 0;
+        }
+        #history a {
+            text-decoration: none;
+            color: #eee;
+            padding: 8px 8px;
+            display: block;
+            font-size: 1.2em;
+        }
+        #history a:active {
+            color: orange;
         }
     </style>
     
@@ -91,6 +108,8 @@
   
     <div id="record"></div>    
     <p id="status"></p>  
+
+    <!--ul id="history"></ul-->
     
     <img src="hal_active.jpg" class="hidden" /> <!-- This is just to preload the active state -->
     </body>

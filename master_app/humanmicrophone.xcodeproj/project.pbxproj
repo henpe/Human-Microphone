@@ -37,6 +37,7 @@
 		5561BB99148A4971000C18C7 /* AudioEncode.m in Sources */ = {isa = PBXBuildFile; fileRef = 5561BB96148A4971000C18C7 /* AudioEncode.m */; };
 		5561BB9A148A4971000C18C7 /* AudioRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 5561BB98148A4971000C18C7 /* AudioRecord.m */; };
 		5561BB9F148A882C000C18C7 /* RecordingEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 5561BB9E148A882C000C18C7 /* RecordingEncoder.m */; };
+		55C63126148B8B7B0045D4A3 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 55C63125148B8B7B0045D4A3 /* Default.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +79,7 @@
 		5561BB98148A4971000C18C7 /* AudioRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AudioRecord.m; path = Plugins/AudioRecord.m; sourceTree = "<group>"; };
 		5561BB9D148A882C000C18C7 /* RecordingEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RecordingEncoder.h; path = Plugins/RecordingEncoder.h; sourceTree = "<group>"; };
 		5561BB9E148A882C000C18C7 /* RecordingEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecordingEncoder.m; path = Plugins/RecordingEncoder.m; sourceTree = "<group>"; };
+		55C63125148B8B7B0045D4A3 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 		5561BB38148A4792000C18C7 = {
 			isa = PBXGroup;
 			children = (
+				55C63125148B8B7B0045D4A3 /* Default.png */,
 				5561BB93148A47D9000C18C7 /* www */,
 				5561BB64148A4793000C18C7 /* humanmicrophone */,
 				5561BB49148A4793000C18C7 /* Frameworks */,
@@ -309,6 +312,7 @@
 				5561BB85148A4793000C18C7 /* Capture.bundle in Resources */,
 				5561BB87148A4793000C18C7 /* PhoneGap.plist in Resources */,
 				5561BB94148A47D9000C18C7 /* www in Resources */,
+				55C63126148B8B7B0045D4A3 /* Default.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

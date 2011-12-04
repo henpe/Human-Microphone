@@ -13,7 +13,7 @@
 
     <style>
         body {
-            background:#000 url(/img/black-Linen.png);
+            background:#000 url(/img/black-Linen.jpg);
             color:#fff;
             text-align:center;
             margin:0;

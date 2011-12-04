@@ -156,6 +156,11 @@
                     $('#page').removeClass("talking listening");
                 });
                 
+                $(player).bind('error', function(e){
+                    $("#log").html("play message error");
+                    $('#page').removeClass("talking listening");
+                });
+                
                 /*socket.on("networkTime", function(time) {
                     timeOffset = getClientTime(time);
                 });*/

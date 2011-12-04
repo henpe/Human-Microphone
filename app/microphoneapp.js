@@ -7,7 +7,8 @@ var express = require('express'),
 	base60 = require('./base60'),
 	fs = require('fs'),
 	events = require('events'),
-	ffmpeg = require('./lib/ffmpeg');
+	ffmpeg = require('./lib/ffmpeg'),
+	path = require('path');
 
 var eventEmitter = new events.EventEmitter();
 
@@ -87,21 +88,29 @@ app.get('/play', function(req, res){
 app.get('/play/:id', function(req, res){
 
 	if (!req.params.id) {
-		return;
+		res.render('play.jinjs', {
+			title: 'Play - error, no protest found',
+			layout: false,
+			error: 'Unable to find any protest by that name.'
+		});
 	}
 	
-	var path = protestsFileDir + "/" + req.params.id;
+	var filePath = path.join(protestsFileDir, req.params.id);
+    var stat = fs.statSync(filePath);
 
-	res.redirect('/protests/' + req.params.id, 301);
+    res.writeHead(200, {
+        'Content-Type': 'audio/mpeg',
+        'Content-Length': stat.size
+    });
 
-	//res.header('Content-Type: audio/mpeg');
-	/*res.sendfile(path, function(err){
-  		if (err) {
-    		next(err);
-  		} else {
-    		console.log('transferred %s', path);
-  		}
-	});*/
+    var readStream = fs.createReadStream(filePath);
+    readStream.on('data', function(data) {
+        res.write(data);
+    });
+
+    readStream.on('end', function() {
+        res.end();
+    });
 
 });
 

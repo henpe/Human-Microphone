@@ -16,7 +16,7 @@ var app = module.exports = express.createServer();
 
 var port = process.env.PORT || 8080;
 
-var playheadOffset = 3000; // 5000 milliseconds - 5 seconds
+var playheadOffset = 4000; // 5000 milliseconds - 5 seconds
 
 var io = require('socket.io').listen(app);
 

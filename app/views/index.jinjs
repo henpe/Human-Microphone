@@ -37,7 +37,16 @@
             });
             console.log(document.domain);
             // Create socket
-            var socket = io.connect();
+            try {
+            var socket = io.connect(document.domain, {
+                'reconnect': true,
+                'reconnection delay': 500,
+                'max reconnection attempts': 5
+            });
+            
+            } catch(e) {
+            	console.log(e);
+            }
             
             // Connect client
             socket.on('connect', function () {

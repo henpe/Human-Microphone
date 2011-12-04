@@ -94,7 +94,7 @@
                     
                     // Load new audio file
                     $(player).attr("src", src);
-                    player.load();
+                    player.play();
                     
                     $("#log").html("changed message finished");
                 });

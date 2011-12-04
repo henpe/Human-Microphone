@@ -215,9 +215,13 @@
                            $("#log").html("play message timeout");
                            if (player && $(player).attr('data-isloaded')) {
                                $("#log").html("play message complete");
-                               console.log("player", player);
-                               player.play();
-                               $('#page').removeClass("listening").addClass("talking");
+                               var currentTime = new Date().getTime();
+                               if (currentTime < playAt + 100 && currentTime > playAt - 100) {
+                                   player.play();
+                                   $('#page').removeClass("listening").addClass("talking");
+                               } else {
+                                   $('#page').removeClass("listening");
+                               }
                            }
                        }, timeOut);
                     }                    
@@ -282,7 +286,7 @@
                 <div id="join"><span>Join!</span></div>
             </div>
             <div id="status">
-                <p class="default">This is The Inhuman Megaphone</p>
+                <p class="default">This is The Inhuman Microphone</p>
 	            <p class="listening">Listening for messages</p>
 	            <p class="talking">Playing a message</p>
             </div>

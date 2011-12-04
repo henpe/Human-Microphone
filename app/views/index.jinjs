@@ -35,19 +35,15 @@
             $('#message').bind("click", function(e) {
                 player.play();
             });
-            console.log(document.domain);
+
             // Create socket
-            try {
             var socket = io.connect(document.domain, {
                 'reconnect': true,
                 'reconnection delay': 500,
                 'max reconnection attempts': 5
             });
             
-            } catch(e) {
-            	console.log(e);
-            }
-            
+
             // Connect client
             socket.on('connect', function () {
                 console.log('connected');
@@ -132,7 +128,7 @@
         
         
         var offsetTimes = new Array();
-		var precision = 8;
+		var precision = 4;
         
         function getClientTime(time) {
             var t = time - new Date().getTime();
@@ -142,8 +138,8 @@
             	offsetTimes = offsetTimes.splice(0, 25);
             }
             offsetTimes.push(t);
-			//return t;
-            return getStandardDeviation(offsetTimes, precision);
+			return t;
+            //return getStandardDeviation(offsetTimes, precision);
         }
         
         

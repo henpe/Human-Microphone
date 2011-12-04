@@ -42,7 +42,14 @@
                 'reconnection delay': 500,
                 'max reconnection attempts': 5
             });
-            
+
+            // Handshake 
+            var initialTime = new Date().getTime();
+            $.get('/time', function(data, textStatus, jqXHR) {
+                var requestDelay = new Date().getTime() - initialTime;
+                timeOffset = getClientOffset(data, requestDelay);
+                $('#offset').html(timeOffset);
+            }, 'text');
 
             // Connect client
             socket.on('connect', function () {
@@ -62,10 +69,9 @@
                     socket.emit('messageLoaded', clientId);
                 });
                 
-                socket.on("networkTime", function(time) {
+                /*socket.on("networkTime", function(time) {
                     timeOffset = getClientTime(time);
-                    //console.log("ti", timeOffset, time);
-                });
+                });*/
                 
                 // Message change event handler.
                 socket.on("messageChange", function onMessageChange(json) {
@@ -108,7 +114,6 @@
                     var playAt = (params.tsAt - timeOffset);
                     
                     var timeOut = playAt - d;
-
                     
 					$('#playAt').html('Play At: ' + playAt);
 					$('#time').html('Timeout: ' + timeOut + ' - Offset: ' + timeOffset + ' - date: ' + d);
@@ -128,24 +133,13 @@
                 });                
             });
         });
-        
-        
-        var offsetTimes = new Array();
-		var precision = 8;
-        
-        function getClientTime(time) {
-            var t = time - new Date().getTime();
-            $('#offset').html(t);
-            /*if (offsetTimes.length > 60) {
-            	offsetTimes = offsetTimes.splice(0, 25);
-            }
-            offsetTimes.push(t);*/
-			return t;
-            //return parseInt(getStandardDeviation(offsetTimes, precision));
+
+        function getClientOffset(serverTime, delay) {
+            var offset = serverTime - (new Date().getTime() - delay);
+            $('#offset').html(offset);
+
+            return offset;
         }
-        
-        
-        
         
 		// Programmer: Larry Battle 
 		// Date: Mar 06, 2011

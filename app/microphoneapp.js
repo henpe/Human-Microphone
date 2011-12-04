@@ -189,7 +189,7 @@ app.post('/save', function(req, res, next){
 				
 				var oggFnNew = fn.join('/');
 				var oggFile = oggFnNew + '.ogg'
-				console.log('Creating an ogg', oggFnNew, oggFile);
+				console.log('Creating an ogg', fnNew, oggFile);
 				ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
 				//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
 					console.log('OGG ENCODE', stderr, stdout, exitCode);

@@ -115,7 +115,7 @@
                     }
                     
 					$('#playAt').html('Play At: ' + playAt);
-					$('#time').html('Timeout: ' + timeOut + ' - date: ' + d);
+					$('#time').html('Timeout: ' + timeOut + ' - Offset: ' + timeOffset + ' - date: ' + d);
 					
                     if (timeOut < 0) {
                        //dont play, too far behind.
@@ -145,7 +145,7 @@
             }
             offsetTimes.push(t);
 			//return t;
-            return getStandardDeviation(offsetTimes, precision);
+            return parseInt(getStandardDeviation(offsetTimes, precision));
         }
         
         

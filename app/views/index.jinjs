@@ -145,7 +145,7 @@
             }, 'text');
 
             // Connect client
-            if (hasJoined === true) {
+            //if (hasJoined === true) {
                 socket.on('connect', function () {
                     console.log('connected');
                     isConnected = true;
@@ -251,7 +251,7 @@
                         }                    
                     });                
                 });                
-            }
+            //}
         });
 
         function getClientOffset(serverTime, delay) {

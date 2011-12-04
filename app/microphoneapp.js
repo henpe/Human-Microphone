@@ -72,6 +72,14 @@ app.get('/', function(req, res){
   	});
 });
 
+app.get('/time', function(req, res){
+  	res.render('time.jinjs', {
+    	title: 'Time',
+    	layout: false,
+    	time: new Date().getTime()
+  	});
+});
+
 
 app.get('/play', function(req, res){
 	var ts = new Date().getTime();

@@ -111,7 +111,7 @@
                     if (playAt > 0) {
                     	timeOut = d - playAt;
                     } else {
-                    	timeOut = playAt - d;
+                    	timeOut = d + playAt;
                     }
                     
 					$('#playAt').html('Play At: ' + playAt);

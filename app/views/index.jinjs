@@ -109,9 +109,9 @@
                     
                     var timeOut = 0;
                     if (playAt > 0) {
-                    	timeOut = d - playAt;
-                    } else {
                     	timeOut = d + playAt;
+                    } else {
+                    	timeOut = d - playAt;
                     }
                     
 					$('#playAt').html('Play At: ' + playAt);

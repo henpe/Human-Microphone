@@ -135,17 +135,17 @@
         
         
         var offsetTimes = new Array();
-		var precision = 4;
+		var precision = 8;
         
         function getClientTime(time) {
             var t = time - new Date().getTime();
             $('#offset').html(t);
-            if (offsetTimes.length > 60) {
+            /*if (offsetTimes.length > 60) {
             	offsetTimes = offsetTimes.splice(0, 25);
             }
-            offsetTimes.push(t);
-			//return t;
-            return parseInt(getStandardDeviation(offsetTimes, precision));
+            offsetTimes.push(t);*/
+			return t;
+            //return parseInt(getStandardDeviation(offsetTimes, precision));
         }
         
         

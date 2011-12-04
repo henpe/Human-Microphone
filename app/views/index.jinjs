@@ -13,14 +13,18 @@
 
     <style>
         body {
-            background:#333;
+            background:#000;
             color:#fff;
             text-align:center;
+            margin:0;
+            padding:0;
+            width:100%;
         }
         #page {
-            width: 300px;
+            width: 320px;
             margin:auto 0;
-            text-align:left;          
+            text-align:left;
+            display:inline-block;          
         }
         #message {
             height:180px;
@@ -113,7 +117,8 @@
                 });
                 
                 $(player).bind('ended', function(e){
-                    $('#message').removeClass("talking, listening");
+                    console.log("ended");
+                    $('#message').removeClass("talking listening");
                 });
                 
                 /*socket.on("networkTime", function(time) {

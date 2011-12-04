@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'humanmicrophone' target in the 'humanmicrophone' project
+//
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+#endif

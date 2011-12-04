@@ -178,7 +178,7 @@ app.post('/save', function(req, res, next){
 		
 		/* added output to files as ffmpeg seems to have a problem outputting to the same file */
 		var mp3File = fnNew + '.mp3';
-		ffmpeg.exec(['-i', fnNew, '-ab', '32k', 'ac', '1', '-acodec', 'libmp3lame', '-y', '-v', 4, mp3File], function(stderr, stdout, exitCode) {
+		ffmpeg.exec(['-i', fnNew, '-ab', '32k', '-ac', '1', '-acodec', 'libmp3lame', '-y', '-v', 4, mp3File], function(stderr, stdout, exitCode) {
 			//if (!stderr) {			
 			
 			fs.unlinkSync(fnNew);

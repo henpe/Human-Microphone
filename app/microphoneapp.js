@@ -180,17 +180,17 @@ app.post('/save', function(req, res, next){
 		var mp3File = fnNew + '.mp3';
 		ffmpeg.exec(['-i', fnNew, '-ab', '32k', '-ar', '22050', '-ac', '1', '-acodec', 'libmp3lame', '-y', '-v', 4, mp3File], function(stderr, stdout, exitCode) {
 			//if (!stderr) {			
-			
-			fs.unlinkSync(fnNew);
-			fs.renameSync(mp3File, fnNew);
-			io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
-
-			res.render('save.jinjs', {
-						title: 'Save Form',
-						layout: false,
-						id: newFilename
-			});
-					
+			try {
+				fs.unlinkSync(fnNew);
+				fs.renameSync(mp3File, fnNew);
+				io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
+			} catch (error) {
+				return res.render('save.jinjs', {
+							title: 'Save Form',
+							layout: false,
+							error: 'Failed to protest'
+				});
+			}
 					
 			console.log('FFMPEG ENCODE', stderr, stdout, exitCode);
 
@@ -200,34 +200,15 @@ app.post('/save', function(req, res, next){
 															ts: ts,
 															tsAt: ts+playheadOffset
 			}));
-					
-			/*fn[fn.length-1] = 'ogg';
-			fn[fn.length] = newFilename;
 			
-			var oggFnNew = fn.join('/');
-			var oggFile = oggFnNew + '.ogg'
-			
-			console.log('Creating an ogg', fnNew, oggFile);
-			ffmpeg.exec(['-i', fnNew,'-acodec', 'ogg', '-y', '-v', 4, oggFile], function(stderr, stdout, exitCode) {
-			//ffmpeg.convert('ogg', fnNew, ['-acodec', 'ogg', '-y'], fn.join('/'), function(stderr, stdout, exitCode) {
-				console.log('OGG ENCODE', stderr, stdout, exitCode);
-				io.sockets.emit('messageChange', JSON.stringify({id: newFilename, ts: new Date().getTime()}));
-				
-				fs.renameSync(oggFile, oggFnNew);
-				
-				res.render('save.jinjs', {
-					title: 'Save Form',
-					layout: false,
-					id: newFilename
-				});
-				
-			});	*/
-
-			//}
+			return res.render('save.jinjs', {
+						title: 'Save Form',
+						layout: false,
+						id: newFilename
+			});
 		});	
 		
 	} else {
-	
 		res.render('save.jinjs', {
 			title: 'Save Form',
 			layout: false,
@@ -242,6 +223,10 @@ app.get('/upload', function(req, res){
     layout: false
   });
 });
+
+
+
+
 
 
 

@@ -22,6 +22,9 @@
             font-family:helvetica;
             font-size:13px;
         }
+        a {
+            color:#999;
+        }
         #page {
             width: 320px;
             margin:auto 0;
@@ -95,6 +98,11 @@
         #join span:hover {
             background:rgba(110,110,110,1);
             cursor:pointer;
+        }
+        #description {
+            margin-top:10px;
+            padding-top:10px;
+            color:#888;
         }
         #error {
             position:fixed;
@@ -315,7 +323,13 @@
 	            <p class="listening">Incoming message!</p>
 	            <p class="talking">Broadcasting message!</p>
             </div>
-            <div class=""></div>
+            <div id="description">
+                <p>
+                Inspired by Occupy Wall Street's <a href="http://www.thenation.com/blog/163767/we-are-all-human-microphones-now">Human Microphone</a>
+                </p>
+                
+                <p>Made by <a href="http://www.twitter.com/indeox">@indeox</a> <a href="http://www.twitter.com/hpettersson">@hpettersson</a> <a href="http://www.twitter.com/shoez">@shoez</a> <a href="http://www.twitter.com/tomhannen">@tomhannen</a></p>
+            </div>
             <div id="error">
 	            <div id="log"></div>
 	            <div id="src"></div>

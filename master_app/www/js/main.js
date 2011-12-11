@@ -1,6 +1,7 @@
 var app = {
             
     serverEndpoint:     "http://184.72.223.90/save", // No trailing slash
+    serverEndpoint:     "http://www.deepcobalt.com/temp/humanmicrophone/upload.php",
     recordingReference: null,
     recInterval:        null,
     
@@ -36,8 +37,6 @@ var app = {
     startRecording: function() {
         var self = this;
         
-        this.recordNode.addClass('recording');
-        
         // Unfortunately, record with settings doesn't quite work    
         /*var recordSettings = {
                 "FormatID": "kAudioFormatULaw",
@@ -48,14 +47,19 @@ var app = {
         this.recordingReference.startRecordWithSettings(recordSettings);
         */
         
-        this.recordingReference.startRecord();
+        self.recordNode.addClass('recording');        
+        self.statusNode.text("0 sec");
+        setTimeout(function() {
+            self.recordingReference.startRecord();
+            
+            var recTime = 0;
+            self.recInterval = setInterval(function() {
+                recTime = recTime + 1;
+                //setAudioPosition(recTime + " sec");
+                self.statusNode.text(recTime + " sec");
+            }, 1000);                        
+        }, 0);
         
-        var recTime = 0;
-        this.recInterval = setInterval(function() {
-            recTime = recTime + 1;
-            //setAudioPosition(recTime + " sec");
-            self.statusNode.text(recTime + " sec");
-        }, 1000);        
     },
 
     stopRecording: function() {
@@ -112,7 +116,7 @@ var app = {
                 }, 3000);
             },
             function(error) {
-                self.statusNode.text("Error uploading. Retry.");
+                self.statusNode.text("Error uploading<br>Retry");
                 self.statusNode.unbind('click');
                 self.statusNode.click(function() { app.uploadRecording(path); });
                 console.log('Error uploading file ' + path + ': ' + error.code);

@@ -7,11 +7,6 @@
 	<meta charset="utf-8">
 
 
-	<!-- iPad/iPhone specific css below, add after your main css >
-	<link rel="stylesheet" media="only screen and (max-device-width: 1024px)" href="ipad.css" type="text/css" />		
-	<link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="iphone.css" type="text/css" />		
-	-->
-	<!-- If your application is targeting iOS BEFORE 4.0 you MUST put json2.js from http://www.JSON.org/json2.js into your www directory and include it here -->
     <script type="text/javascript" charset="utf-8" src="js/jquery-1.7.js"></script>
 	<script type="text/javascript" charset="utf-8" src="js/phonegap-1.2.0.js"></script>
     <!--script type="text/javascript" charset="utf-8" src="jsaudio_record.js"></script-->
@@ -19,65 +14,45 @@
     <script type="text/javascript" charset="utf-8" src="js/recording_encoder.js"></script>    
     <script type="text/javascript" charset="utf-8" src="js/main.js"></script>    
     <script type="text/javascript">
-
-
-	// If you want to prevent dragging, uncomment this section
-	/*
-	function preventBehavior(e) 
-	{ 
-      e.preventDefault(); 
-    };
-	document.addEventListener("touchmove", preventBehavior, false);
-	*/
-	
-	/* If you are supporting your own protocol, the var invokeString will contain any arguments to the app launch.
-	see http://iphonedevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html
-	for more details -jm */
-	/*
-	function handleOpenURL(url)
-	{
-		// TODO: do something with the url passed in.
-	}
-	*/
-	
-	function onBodyLoad()
-	{		
-		document.addEventListener("deviceready", onDeviceReady, false);
-	}
-	
-	/* When this function is called, PhoneGap has been initialized and is ready to roll */
-	/* If you are supporting your own protocol, the var invokeString will contain any arguments to the app launch.
-	see http://iphonedevelopertips.com/cocoa/launching-your-own-application-via-a-custom-url-scheme.html
-	for more details -jm */
-	  
+        // If you want to prevent dragging, uncomment this section	
+        function preventBehavior(e) { 
+           e.preventDefault(); 
+        };
+        document.addEventListener("touchmove", preventBehavior, false);
+            
+        function onBodyLoad() {		
+            document.addEventListener("deviceready", onDeviceReady, false);
+        }		  
     </script>
     
     <style>
         body {              
-            font-family: "Gill Sans", sans-serif;
+            font-family: "Helvetica Neue", sans-serif;
             -webkit-user-select: none; 
-            margin: 0;
+            margin: 48px 0 0 0;
             padding: 0;
-            background: #000;
+            background: #000 url(img/black_linen.png) repeat;
+            width: 320px;
         }
         .ready #record { display: block; }
         #record { 
             display: none;
-            background: transparent url(hal.jpg) no-repeat 0 0;
-            width: 320px;
-            height: 320px;
+            background: transparent url(img/man.png) no-repeat 0 0;
+            width: 248px;
+            height: 190px;
             display: block;
-            -webkit-background-size: 320px 320px;
+            -webkit-background-size: 248px 190px;
+            margin: 0 auto;
         }
         #record.recording {
-            background: transparent url(hal_active.jpg) no-repeat 0 0;
+            background: transparent url(img/man_broadcasting.png) no-repeat 0 0;
         }        
         .recording { color: red; }
         #status {
             width: 320px;
             text-align: center;
-            color: #990000;
-            font-size: 1.8em;
+            color: #eee;
+            font-size: 1.5em;
             text-transform: uppercase;
         }
         .hidden {
@@ -85,32 +60,14 @@
             left: -3000px;
             top: -3000px;
         }
-        
-        #history {
-            background-color: #333;
-            padding: 0;
-            margin: 0;
-        }
-        #history a {
-            text-decoration: none;
-            color: #eee;
-            padding: 8px 8px;
-            display: block;
-            font-size: 1.2em;
-        }
-        #history a:active {
-            color: orange;
-        }
     </style>
     
   </head>
   <body onload="onBodyLoad()">
   
-    <div id="record"></div>    
-    <p id="status"></p>  
+      <div id="record"></div>    
+      <p id="status"></p>  
 
-    <!--ul id="history"></ul-->
-    
-    <img src="hal_active.jpg" class="hidden" /> <!-- This is just to preload the active state -->
-    </body>
+      <img src="img/man_broadcasting.png" class="hidden" /> <!-- This is just to preload the active state -->
+  </body>
 </html>

@@ -1,7 +1,6 @@
 var app = {
             
-    serverEndpoint:     "http://184.72.223.90/save", // No trailing slash
-    serverEndpoint:     "http://www.deepcobalt.com/temp/humanmicrophone/upload.php",
+    serverEndpoint:     "http://184.72.223.90/save", // No trailing slash    
     recordingReference: null,
     recInterval:        null,
     

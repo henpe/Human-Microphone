@@ -1,6 +1,6 @@
 var app = {
-
-    serverEndpoint:     "http://184.72.223.90", // No trailing slash
+            
+    serverEndpoint:     "http://184.72.223.90/save", // No trailing slash
     recordingReference: null,
     recInterval:        null,
     
@@ -26,7 +26,6 @@ var app = {
         
         this.audioFile = audioFile; // Save reference globally
         createFile(audioFile, function(fileReference) { 
-            //alert(fileReference);
             self.recordingReference = new Media(fileReference, app.processRecording, app.errorRecording);
             $('body').addClass('ready'); 
         });  
@@ -36,8 +35,20 @@ var app = {
     
     startRecording: function() {
         var self = this;
-        this.recordingReference.startRecord();
+        
         this.recordNode.addClass('recording');
+        
+        // Unfortunately, record with settings doesn't quite work    
+        /*var recordSettings = {
+                "FormatID": "kAudioFormatULaw",
+                    "SampleRate": 8000.0,
+                    "NumberOfChannels": 1,
+                    "LinearPCMBitDepth": 16
+            }
+        this.recordingReference.startRecordWithSettings(recordSettings);
+        */
+        
+        this.recordingReference.startRecord();
         
         var recTime = 0;
         this.recInterval = setInterval(function() {
@@ -50,7 +61,9 @@ var app = {
     stopRecording: function() {
         this.recordNode.removeClass('recording');    
         clearInterval(this.recInterval);
+        
         this.recordingReference.stopRecord();
+        //this.recordingReference.stopRecordWithSettings();
     },
     
     processRecording: function() {    
@@ -85,8 +98,7 @@ var app = {
         options.params = params;
         
         ft.upload(path,
-            "http://www.deepcobalt.com/temp/humanmicrophone/upload.php",
-            //serverEndpoint+'/save',
+            self.serverEndpoint,
             function(result) {
                 var responseId = result.id,
                     datestamp  = new Date().getTime();
@@ -151,5 +163,3 @@ function deleteFile(fileURI) {
 function onDeviceReady() {
     app.init(); 
 };
-
-

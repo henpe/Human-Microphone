@@ -46,23 +46,23 @@ var app = {
         this.recordingReference.startRecordWithSettings(recordSettings);
         */
         
-        self.recordNode.addClass('recording');        
+        $('body').addClass('recording');        
         self.statusNode.text("0 sec");
         setTimeout(function() {
             self.recordingReference.startRecord();
             
             var recTime = 0;
             self.recInterval = setInterval(function() {
-                recTime = recTime + 1;
+                recTime = recTime + 0.1;
                 //setAudioPosition(recTime + " sec");
-                self.statusNode.text(recTime + " sec");
-            }, 1000);                        
+                self.statusNode.text(recTime.toFixed(1) + " sec");
+            }, 100);                        
         }, 0);
         
     },
 
     stopRecording: function() {
-        this.recordNode.removeClass('recording');    
+        $('body').removeClass('recording');    
         clearInterval(this.recInterval);
         
         this.recordingReference.stopRecord();
@@ -71,7 +71,7 @@ var app = {
     
     processRecording: function() {    
         console.log('processing recording '+app.recordingReference.src);
-        
+        self.statusNode.text("Encoding");
         window.plugins.recordingEncoder.encodeRecording(app.audioFile);
 
         // Arbitrarily start the upload process after 2 seconds
@@ -115,7 +115,7 @@ var app = {
                 }, 3000);
             },
             function(error) {
-                self.statusNode.text("Error uploading<br>Retry");
+                self.statusNode.html("Error uploading<br>Retry");
                 self.statusNode.unbind('click');
                 self.statusNode.click(function() { app.uploadRecording(path); });
                 console.log('Error uploading file ' + path + ': ' + error.code);

@@ -29,11 +29,14 @@
         body {              
             font-family: "Helvetica Neue", sans-serif;
             -webkit-user-select: none; 
-            margin: 48px 0 0 0;
+            margin: 32px 0 0 0;
             padding: 0;
-            background: #000 url(img/black_linen.png) repeat;
+            background: #000 url(img/black_linen.jpg) repeat;
             width: 320px;
         }
+        body.recording {              
+            background: #000 url(img/red_linen.jpg) repeat;
+        }        
         .ready #record { display: block; }
         #record { 
             display: none;
@@ -44,17 +47,20 @@
             -webkit-background-size: 248px 190px;
             margin: 0 auto;
         }
-        #record.recording {
+        .recording #record {
             background: transparent url(img/man_broadcasting.png) no-repeat 0 0;
         }        
-        .recording { color: red; }
         #status {
             width: 320px;
             text-align: center;
             color: #eee;
-            font-size: 1.5em;
-            text-transform: uppercase;
+            font-size: 1.5em;  
+            line-height: 1;  
+            height: 3em;   
+            margin: 8px 0; 
+            opacity: 0.85; 
         }
+        .recording #status { color: red; }        
         .hidden {
             position: absolute;
             left: -3000px;
@@ -65,9 +71,10 @@
   </head>
   <body onload="onBodyLoad()">
   
-      <div id="record"></div>    
       <p id="status"></p>  
+      <div id="record"></div>    
 
       <img src="img/man_broadcasting.png" class="hidden" /> <!-- This is just to preload the active state -->
+      <img src="img/red_linen.jpg" class="hidden" />
   </body>
 </html>

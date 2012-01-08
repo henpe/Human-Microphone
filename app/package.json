@@ -8,6 +8,7 @@
     , "socket.io": "> 0.0.1"
     , "socket.io-client": "> 0.0.1"
     , "parted": "> 0.0.1"
+    , "redis-node": "> 0.0.1"
   },
   "mappings": {
     "perstore": "http://github.com/kriszyp/perstore/zipball/master"

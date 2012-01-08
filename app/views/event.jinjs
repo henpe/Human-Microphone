@@ -1,0 +1,57 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+
+    <title>{{ title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+    <!-- script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script -->
+	<script>
+		var event = {
+			title: "{{ title }}",
+			eventId: "{{ talkData.eventId }}",
+			userId: "{{ talkData.userId }}",
+			name: "{{ userData.name }}",
+			email: "{{ userData.email }}"
+		};
+	</script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/scripts.js"></script>
+
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div id="page" data-role="page" class="type-index">
+        <div data-role="content">
+            <div id="message">
+                <audio src="/audio/nu_click.mp3"></audio>
+                <div id="join"><span>Join!</span></div>
+            </div>
+            <div id="status">
+                <p class="default">This is The Inhuman Microphone</p>
+	            <p class="listening">Incoming message!</p>
+	            <p class="talking">Broadcasting message!</p>
+            </div>
+            <div id="description">
+                <p>
+                Inspired by Occupy Wall Street's <a href="http://www.thenation.com/blog/163767/we-are-all-human-microphones-now">Human Microphone</a>
+                </p>
+                
+                <p>Made by <a href="http://www.twitter.com/indeox">@indeox</a> <a href="http://www.twitter.com/hpettersson">@hpettersson</a> <a href="http://www.twitter.com/shoez">@shoez</a> <a href="http://www.twitter.com/tomhannen">@tomhannen</a></p>
+            </div>
+            <div id="error">
+	            <div id="log"></div>
+	            <div id="src"></div>
+	            <div id="offset"></div>
+	            <div id="time"></div>
+	            <div id="playAt"></div>
+	            <div id="playAtServer"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

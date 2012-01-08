@@ -8,6 +8,7 @@ var express = require('express'),
 	fs = require('fs'),
 	events = require('events'),
 	ffmpeg = require('./lib/ffmpeg'),
+	redis = require('redis-node'),
 	path = require('path');
 
 var eventEmitter = new events.EventEmitter();
@@ -19,6 +20,9 @@ var port = process.env.PORT || 8080;
 var playheadOffset = 4000; // 5000 milliseconds - 5 seconds
 
 var io = require('socket.io').listen(app);
+
+// Redis
+var redisClient = redis.createClient(); 
 
 
 var protestsFileDir = __dirname + '/public/protests';
@@ -233,8 +237,79 @@ app.get('/upload', function(req, res){
 });
 
 
+app.get('/register', function(req, res) {
+	return res.render('register_form.jinjs', {
+		title: 'Register',
+		layout: false
+	});
+});
 
+app.post('/register', function(req, res) {
 
+	if (!req.body.title) {
+		return res.render('register.jinjs', {
+			title: 'Failed',
+			layout: false,
+			error: 'No title'
+		});
+	}
+	
+	if (!req.body.email) {
+		return res.render('register.jinjs', {
+			title: 'Failed',
+			layout: false,
+			error: 'No email'
+		});
+	}
+	
+	if (!req.body.name) {
+		return res.render('register.jinjs', {
+			title: 'Failed',
+			layout: false,
+			error: 'No name'
+		});
+	}
+	
+	var num = parseInt((new Date().getTime()/1000));
+	var talkId = base60.numtosxg(num);
+	
+	var userId = new String(req.body.email);
+    userId = userId.replace(/[^a-zA-Z0-9]/g, '');
+	
+	// check the talk ID doesn't exist first..
+	
+	// register the talk
+	var talkDetails = {
+		talkId: talkId,
+		userId: userId 
+	};
+	redisClient.set('talk:'+talkId, talkDetails, function (err, exists) {
+		if (err) {
+			console.log('Unable to save talk');
+			return;
+		}
+		
+		return res.render('register.jinjs', {
+			title: 'Registered',
+			layout: false,
+			talkId: talkId,
+			userId: userId
+		});
+	});
+	
+	// register the user
+	var userDetails = {
+		email: req.body.email,
+		name: req.body.name,
+		userId: userId
+	};
+	redisClient.set('user:'+userId, userDetails, function (err, exists) {
+		if (err) {
+			console.log('Unable to save user details - ' + exists);
+			return;
+		}
+	});
+});
 
 
 

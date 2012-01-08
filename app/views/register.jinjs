@@ -1,5 +1,5 @@
 {% if error %}
 { "error": "{{ error }}" }
 {% else %}
-{ "talkId": "{{ talkId }}", "userId": "{{ userId }}" }
+{ "eventId": "{{ eventId }}", "userId": "{{ userId }}" }
 {% endif %}

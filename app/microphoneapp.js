@@ -69,11 +69,46 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   	res.render('index.jinjs', {
     	title: 'Home',
     	layout: false
   	});
+});
+
+app.get('/event/:eventId', function(req, res) {
+
+	redisClient.get('event:'+req.params.eventId, function (err, talkData) {
+		if (err) {
+			return res.render('event.jinjs', {
+				title: 'Event not found',
+				layout: false
+			});
+		}
+		talkData = JSON.parse(talkData);
+		console.log(req.params.eventId);
+		console.log(talkData);;
+		redisClient.get('user:'+talkData.userId, function (err, userData) {
+			if (err) {
+				return res.render('event.jinjs', {
+					title: 'User not found',
+					layout: false
+				});
+			}
+			userData = JSON.parse(userData);
+			return res.render('event.jinjs', {
+				title: talkData.title,
+				layout: false,
+				talkData: talkData,
+				userData: userData
+			});	
+		});
+		
+		
+
+	});
+	
+
 });
 
 app.get('/time', function(req, res){
@@ -263,19 +298,23 @@ app.post('/register', function(req, res) {
 	}
 	
 	var num = parseInt((new Date().getTime()/1000));
-	var talkId = base60.numtosxg(num);
+	var eventId = base60.numtosxg(num);
 	
 	var userId = new String(req.body.email);
     userId = userId.replace(/[^a-zA-Z0-9]/g, '');
 	
 	// check the talk ID doesn't exist first..
 	
+	
+	
 	// register the talk
 	var talkDetails = {
-		talkId: talkId,
-		userId: userId 
+		eventId: eventId,
+		userId: userId,
+		title: req.body.title
 	};
-	redisClient.set('talk:'+talkId, talkDetails, function (err, exists) {
+	console.log(JSON.stringify(talkDetails));
+	redisClient.set('event:'+eventId, JSON.stringify(talkDetails), function (err, exists) {
 		if (err) {
 			console.log('Unable to save talk');
 			return;
@@ -284,7 +323,7 @@ app.post('/register', function(req, res) {
 		return res.render('register.jinjs', {
 			title: 'Registered',
 			layout: false,
-			talkId: talkId,
+			eventId: eventId,
 			userId: userId
 		});
 	});
@@ -295,7 +334,7 @@ app.post('/register', function(req, res) {
 		name: req.body.name,
 		userId: userId
 	};
-	redisClient.set('user:'+userId, userDetails, function (err, exists) {
+	redisClient.set('user:'+userId, JSON.stringify(userDetails), function (err, exists) {
 		if (err) {
 			console.log('Unable to save user details - ' + exists);
 			return;

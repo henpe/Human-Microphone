@@ -42,6 +42,7 @@
                 
                 <p>Made by <a href="http://www.twitter.com/indeox">@indeox</a> <a href="http://www.twitter.com/hpettersson">@hpettersson</a> <a href="http://www.twitter.com/shoez">@shoez</a> <a href="http://www.twitter.com/tomhannen">@tomhannen</a></p>
             </div>
+
             <div id="error">
 	            <div id="log"></div>
 	            <div id="src"></div>

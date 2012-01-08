@@ -67,15 +67,34 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-// Routes
 
+<<<<<<< HEAD
 app.get('/', function(req, res) {
   	res.render('index.jinjs', {
     	title: 'Home',
+=======
+/**
+ * Routes
+ */
+
+// Home
+app.get('/', function(req, res){
+    res.render('index.jinjs', {
+        title: 'Home',
+        layout: false
+    });
+});
+
+// Event
+app.get('/event/:id', function(req, res){
+  	res.render('protest.jinjs', {
+    	title: 'Protest',
+>>>>>>> 02fd522b64873fcf511173f5cb16ddf30355f2d7
     	layout: false
   	});
 });
 
+<<<<<<< HEAD
 app.get('/event/:eventId', function(req, res) {
 
 	redisClient.get('event:'+req.params.eventId, function (err, talkData) {
@@ -111,6 +130,9 @@ app.get('/event/:eventId', function(req, res) {
 
 });
 
+=======
+// Time
+>>>>>>> 02fd522b64873fcf511173f5cb16ddf30355f2d7
 app.get('/time', function(req, res){
   	res.render('time.jinjs', {
     	title: 'Time',
@@ -118,7 +140,6 @@ app.get('/time', function(req, res){
     	time: new Date().getTime()
   	});
 });
-
 
 /* this is to be removed */
 app.get('/play', function(req, res){
@@ -134,7 +155,7 @@ app.get('/play', function(req, res){
   	});
 });
 
-
+// Play a specific message
 app.get('/play/:id', function(req, res){
 
 	if (!req.params.id) {
@@ -164,7 +185,7 @@ app.get('/play/:id', function(req, res){
 
 });
 
-
+// Play OGG message
 app.get('/play/ogg/:id', function(req, res){
 
 	if (!req.params.id) {
@@ -194,10 +215,7 @@ app.get('/play/ogg/:id', function(req, res){
 
 });
 
-
-
-
-
+// Save message
 app.post('/save', function(req, res, next){
 
 	/*
@@ -212,9 +230,8 @@ app.post('/save', function(req, res, next){
 	var fnNew = fn.join('/');
 
 	fs.rename(req.body.filename, fnNew);
-
+	
 	if (io.sockets) {
-		
 		/* added output to files as ffmpeg seems to have a problem outputting to the same file */
 		var mp3File = fnNew + '.mp3';
 		ffmpeg.exec(['-i', fnNew, '-ab', '32k', '-ar', '22050', '-ac', '1', '-acodec', 'libmp3lame', '-y', '-v', 4, mp3File], function(stderr, stdout, exitCode) {
